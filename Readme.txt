@@ -5,12 +5,4 @@ Ae mỗi người tạo một branch với tên mình (eg: hoanganh) để làm 
 
 
 
-//kiem tra create branch by hoanganh
-//ok
-
-
-
-graph
-vertex (id)
-edge (from to, isWeighted, isDirected, label = weight)
-Algorith: abstract class
+Graph demo: graph gồm list vertex và edge. Hiển thị graph bằng các edge của nó (directed và undirected)
