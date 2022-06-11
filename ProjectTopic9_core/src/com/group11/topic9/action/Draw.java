@@ -30,7 +30,7 @@ public class Draw {
             choose = Integer.parseInt(sc.nextLine());
             if (choose != 1) break;
             System.out.println("Vertex " + id + " added");
-            graphVertex.add(addVertex());
+            graphVertex.add(createVertex());
         }       //add Vertex
 
         while (true){
@@ -49,7 +49,7 @@ public class Draw {
                         break;
                     }
                 }
-            } while (!check);
+            } while (!check);           //check vertex1
 
             check = false;
 
@@ -64,7 +64,7 @@ public class Draw {
                         break;
                     }
                 }
-            } while (!check);
+            } while (!check);           //check vertex2
 
             check = false;
 
@@ -80,14 +80,15 @@ public class Draw {
             if (!check && e != null) {
                 graphEdge.add(e);
                 System.out.println("edge was added");
-            }
+            } else
+                System.out.println("add edge failed");
 
         }      //add Edge
 
         return new Graph(graphEdge, graphVertex);
     }
 
-    public Vertex addVertex(){
+    public Vertex createVertex(){
         return new Vertex(id++);
     }
 
@@ -100,5 +101,41 @@ public class Draw {
         }
         System.out.println("trung dinh");
         return null;
+    }
+
+    public void addVertexToExistingGraph(Graph g){
+        System.out.println("Vertex " + id + " added");
+        g.getListVertex().add(createVertex());
+    }
+
+    public void addEdgeToExistingGraph(Graph g){
+        Edge e;
+        Scanner sc = new Scanner(System.in);
+
+        int choose;
+        Vertex ver1;
+        Vertex ver2;
+        do {
+            System.out.print("nhap dinh 1: ");
+            choose = Integer.parseInt(sc.nextLine());
+
+            ver1 = g.hasVertex(choose);
+
+        } while (ver1 == null);
+
+        do {
+            System.out.print("nhap dinh 2: ");
+            choose = Integer.parseInt(sc.nextLine());
+
+            ver2 = g.hasVertex(choose);
+
+        } while (ver2 == null);
+
+        e = createEdge(ver1, ver2, 0.0f);
+
+        if (e != null)
+            if (g.hasEdge(e))  System.out.println("This edge existed");
+            else
+                g.getListEdge().add(e);
     }
 }

@@ -38,9 +38,9 @@ public class Edge {
         return isWeighed;
     }
 
-    public boolean isDirected() {
-        return isDirected;
-    }
+//    public boolean isDirected() {
+//        return isDirected;
+//    }
 
     public float getWeight() {
         return weight;
@@ -80,7 +80,23 @@ public class Edge {
 
     public boolean equals(Edge e){
         if (this.isDirected)
-            return (this.from == e.getFrom() && this.to == e.getTo());
-        return this.myVertex.equals(e.getMyVertex());
+            return (this.from.getId() == e.getFrom().getId() && this.to.getId() == e.getTo().getId());
+
+        int i;
+        int j = 0, y = 0;
+        for (i = 0; i < this.myVertex.size(); i++){
+            if (e.getMyVertex().get(0).getId() == this.myVertex.get(i).getId()){
+                j = 1;
+                break;
+            }
+        }
+
+        if (j == 0) return false;
+
+        if (e.getMyVertex().get(1).getId() == this.myVertex.get(1-i).getId()){
+            y = 1;
+        }
+
+        return j == y;
     }
 }

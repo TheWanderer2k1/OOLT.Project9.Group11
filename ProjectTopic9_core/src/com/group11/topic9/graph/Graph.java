@@ -29,6 +29,10 @@ public class Graph {
         this.listVertex = listVertex;
     }
 
+    public boolean isDirected() {
+        return isDirected;
+    }
+
     public void setDirected(boolean directed) {
         isDirected = directed;
         if (!isDirected)
@@ -39,6 +43,34 @@ public class Graph {
             for (int i = 0; i < listEdge.size(); i++){
                 listEdge.get(i).setDirected();
             }
+    }
+
+    public Vertex hasVertex(int id){
+        for (int i = 0; i < this.listVertex.size(); i++){
+            if (id == this.listVertex.get(i).getId()){
+                return this.listVertex.get(i);
+            }
+        }
+
+        return null;
+    }
+
+    public Boolean hasEdge(Edge e){
+        if (this.isDirected){
+            for (int i = 0; i < this.getListEdge().size(); i++){
+                if (this.getListEdge().get(i).equals(e)){
+                    return true;
+                }
+            }
+        } else{
+            e.setUnDirected();
+            for (int i = 0; i < this.getListEdge().size(); i++){
+                if (this.getListEdge().get(i).equals(e)){
+                    return true;
+                }
+            }
+        }
+        return false;
     }
 
     public void showGraph(){

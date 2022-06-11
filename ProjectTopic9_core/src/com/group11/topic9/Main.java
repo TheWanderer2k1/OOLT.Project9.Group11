@@ -10,9 +10,6 @@ public class Main {
         Draw dr = new Draw();
         Graph testGraph = dr.drawGraph();
         testGraph.showGraph();
-        testGraph.setDirected(false);
-        testGraph.showGraph();
-        testGraph.setDirected(true);
-        testGraph.showGraph();
+        //ae test cac truong hop ben duoi
     }
 }
