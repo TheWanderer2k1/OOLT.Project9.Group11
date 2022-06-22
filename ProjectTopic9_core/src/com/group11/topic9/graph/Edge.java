@@ -13,6 +13,7 @@ public class Edge {
     private boolean isDirected;
     private float weight;
 
+    //Constructor
     public Edge(Vertex from, Vertex to, ArrayList<Vertex> myVertex, boolean isWeighed, boolean isDirected, float weight) {
         this.from = from;
         this.to = to;
@@ -38,9 +39,9 @@ public class Edge {
         return isWeighed;
     }
 
-//    public boolean isDirected() {
-//        return isDirected;
-//    }
+    public boolean isDirected() {
+        return isDirected;
+    }
 
     public float getWeight() {
         return weight;
@@ -99,4 +100,6 @@ public class Edge {
 
         return j == y;
     }
+
+
 }

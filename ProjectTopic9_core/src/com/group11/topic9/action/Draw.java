@@ -8,8 +8,10 @@ import java.util.ArrayList;
 import java.util.Scanner;
 
 public class Draw {
+    public static final int INFINITE = 1000;
     private int id = 0;
-
+    private float weight;
+    Scanner sc = new Scanner(System.in);
     public Graph drawGraph(){
         ArrayList<Vertex> graphVertex = new ArrayList<Vertex>();
         ArrayList<Edge> graphEdge = new ArrayList<Edge>();
@@ -22,8 +24,6 @@ public class Draw {
         boolean check = false;
 
         System.out.println("Test create graph:");
-
-        Scanner sc = new Scanner(System.in);
         int choose = 1;
         while(true){
             System.out.println("1. Add vertex\n" + "0. exit");
@@ -39,7 +39,7 @@ public class Draw {
             if (choose != 1) break;
 
             do {
-                System.out.print("nhap dinh 1: ");
+                System.out.print("Nhap dinh 1: ");
                 choose = Integer.parseInt(sc.nextLine());
 
                 for (int i = 0; i < graphVertex.size(); i++) {
@@ -54,7 +54,7 @@ public class Draw {
             check = false;
 
             do {
-                System.out.print("nhap dinh 2: ");
+                System.out.print("Nhap dinh 2: ");
                 choose = Integer.parseInt(sc.nextLine());
 
                 for (int i = 0; i < graphVertex.size(); i++) {
@@ -66,9 +66,12 @@ public class Draw {
                 }
             } while (!check);           //check vertex2
 
-            check = false;
+            System.out.print("Nhap trong so : ");
+            weight = sc.nextFloat();
+            sc.nextLine();
 
-            e = createEdge(ver1, ver2, 0.0f);
+            check = false;
+            e = createEdge(ver1, ver2, weight);
 
             for (int i = 0; i < graphEdge.size(); i++){
                 if (e == null || graphEdge.get(i).equals(e)){
@@ -79,10 +82,9 @@ public class Draw {
 
             if (!check && e != null) {
                 graphEdge.add(e);
-                System.out.println("edge was added");
+                System.out.println("Edge was added");
             } else
-                System.out.println("add edge failed");
-
+                System.out.println("Add edge failed");
         }      //add Edge
 
         return new Graph(graphEdge, graphVertex);

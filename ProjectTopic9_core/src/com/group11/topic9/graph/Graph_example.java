@@ -28,11 +28,11 @@ public class Graph_example {
         for (int id = 0; id < 5; id++)
             listVertex.add(new Vertex(id));
 
-        listEdge.add(dr.createEdge(listVertex.get(0),listVertex.get(2), 0.0f));
-        listEdge.add(dr.createEdge(listVertex.get(2),listVertex.get(4), 0.0f));
-        listEdge.add(dr.createEdge(listVertex.get(4),listVertex.get(1), 0.0f));
-        listEdge.add(dr.createEdge(listVertex.get(1),listVertex.get(3), 0.0f));
-        listEdge.add(dr.createEdge(listVertex.get(3),listVertex.get(0), 0.0f));
+        listEdge.add(dr.createEdge(listVertex.get(0),listVertex.get(2), 2.0f));
+        listEdge.add(dr.createEdge(listVertex.get(2),listVertex.get(4), 5.0f));
+        listEdge.add(dr.createEdge(listVertex.get(4),listVertex.get(1), 1.0f));
+        listEdge.add(dr.createEdge(listVertex.get(1),listVertex.get(3), 6.0f));
+        listEdge.add(dr.createEdge(listVertex.get(3),listVertex.get(0), 1.0f));
         return new Graph(listEdge, listVertex);
     }
 }
