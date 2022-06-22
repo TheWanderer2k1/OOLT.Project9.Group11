@@ -4,6 +4,17 @@ import java.util.ArrayList;
 
 public class PseudoStep extends Step{
 
+    protected ArrayList<String> listStep = new ArrayList<>();
+    protected ArrayList<Integer> stepOrder = new ArrayList<>();
+
+    public ArrayList<Integer> getStepOrder() {
+        return stepOrder;
+    }
+
+    public ArrayList<String> getListStep() {
+        return listStep;
+    }
+
     @Override
     public void run() {
 
