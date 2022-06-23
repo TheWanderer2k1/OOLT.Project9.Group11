@@ -12,6 +12,5 @@ public class Main {
         g =  Graph_example.VD2();
         g.setDirected(false);
         g.showGraph();
-        //ae test cac truong hop ben duoi
     }
 }

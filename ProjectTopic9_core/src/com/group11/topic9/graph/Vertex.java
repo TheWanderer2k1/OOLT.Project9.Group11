@@ -1,7 +1,5 @@
 package com.group11.topic9.graph;
 
-import java.util.Objects;
-
 public class Vertex {
     private int id;
 
