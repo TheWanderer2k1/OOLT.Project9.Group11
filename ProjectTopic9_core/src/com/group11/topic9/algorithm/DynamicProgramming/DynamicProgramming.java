@@ -1,12 +1,11 @@
 package com.group11.topic9.algorithm.DynamicProgramming;
 
-import com.group11.topic9.action.AlgorithmStep.containDPStep.DP_DetailedStep;
-import com.group11.topic9.action.AlgorithmStep.containDPStep.DP_PseudoStep;
 import com.group11.topic9.algorithm.Algorithm;
 import com.group11.topic9.graph.Edge;
 import com.group11.topic9.graph.Graph;
 
 import java.util.ArrayList;
+import java.util.Scanner;
 
 public class DynamicProgramming extends Algorithm {
     ArrayList<ArrayList<Float>> minDis = new ArrayList<>();
@@ -44,7 +43,7 @@ public class DynamicProgramming extends Algorithm {
             minDis.get(from).set(to, e.getWeight());
         }
 
-        listPseudoStep.getStepOrder().add(0);
+        pseudoStepOrder.add(0);
         //create prepare 2-dimensional array minDis[n][n] \\n is number of vertexes
         //set all minDis[i][j] to its i-j edge weight, other to infinite
     }
@@ -53,30 +52,31 @@ public class DynamicProgramming extends Algorithm {
         int numberVer = g.getListVertex().size();
 
         for (int k = 0; k < numberVer; k++){
-            listPseudoStep.getStepOrder().add(1);               //we consider vertex k which stands on the shortest path of two other vertexes
-            listDetailedStep.getDetailedCmd().add(DP_DetailedStep.setCmd1(k));
+            pseudoStepOrder.add(1);               //we consider vertex k which stands on the shortest path of two other vertexes
+            listDetailedStep.add("we consider vertex " + k + " which stands on the shortest path of two other vertexes");
             for (int i = 0; i < numberVer; i++){
-                listPseudoStep.getStepOrder().add(2);           //set vertex i to the start vertex
-                listDetailedStep.getDetailedCmd().add(DP_DetailedStep.setCmd2(i));
+                pseudoStepOrder.add(2);           //set vertex i to the start vertex
+                listDetailedStep.add("set vertex " + i + " to the start vertex");
                     for (int j = 0; j < numberVer; j++) {
-                        listPseudoStep.getStepOrder().add(3);   //set vertex j to the end vertex
-                        listPseudoStep.getStepOrder().add(4);
-                        listDetailedStep.getDetailedCmd().add(DP_DetailedStep.setCmd3(j));
+                        pseudoStepOrder.add(3);   //set vertex j to the end vertex
+                        pseudoStepOrder.add(4);
+                        listDetailedStep.add("set vertex " + j + " to the end vertex");
                         if (i != j) {                           //i difference from j so we can process
-                            listDetailedStep.getDetailedCmd().add(DP_DetailedStep.setCmd4(i,j));
+                            listDetailedStep.add(i + " difference from " + j + " so we can process");
                             float tmp = minDis.get(i).get(k) + minDis.get(k).get(j);
-                            listPseudoStep.getStepOrder().add(5);   //calculate tmp =  minDis[i][k] + minDis[k][j]
-                            listDetailedStep.getDetailedCmd().add(DP_DetailedStep.setCmd5(i,k,j));
+                            pseudoStepOrder.add(5);   //calculate tmp =  minDis[i][k] + minDis[k][j]
+                            listDetailedStep.add("calculate tmp = minDis[" + i + "][" + k + "] + minDis[" + k + "][" + j + "]");
 
-                            listPseudoStep.getStepOrder().add(6);
+                            pseudoStepOrder.add(6);
                             if (minDis.get(i).get(j) > tmp) {       //because tmp > current shortest distance between i and j => update minDis[i][j] = tmp
-                                listDetailedStep.getDetailedCmd().add(DP_DetailedStep.setCmd6(i,j));
+                                listDetailedStep.add("because tmp < current shortest distance between " + i + " and " + j + " => update minDis[" + i + "][" + j + "] = tmp");
                                 minDis.get(i).set(j, tmp);
-                                listPseudoStep.getStepOrder().add(7);
+                                pseudoStepOrder.add(7);
+                                listDetailedStep.add("update minDis[" + i + "][" + j + "] = tmp inside the 2-dimension array");
                             } else
-                                listDetailedStep.getDetailedCmd().add(DP_DetailedStep.setCmd7(i,j)); // else because tmp < minDis[i][j] so we keep the current shortest distance between i and j
+                                listDetailedStep.add("because tmp > minDis[" + i + "][" + j + "] so we keep the current shortest distance between " + i + " and " + j); // else because tmp < minDis[i][j] so we keep the current shortest distance between i and j
                         }else
-                            listDetailedStep.getDetailedCmd().add(DP_DetailedStep.setCmd8(i,j));//else   i = j (print vertex id) so we need to change j
+                            listDetailedStep.add("i = j (" + i + " = " + j + ") so we don't need to do anything");//else   i = j (print vertex id) so we need to change j
                 }
             }
         }
@@ -84,14 +84,63 @@ public class DynamicProgramming extends Algorithm {
 
     @Override
     public void executeAlgorithm(Graph graph) {
-        listPseudoStep = new DP_PseudoStep();
-        ((DP_PseudoStep) listPseudoStep).initStep();
+        listPseudoStep = new ArrayList<>();
+        pseudoStepOrder = new ArrayList<>();
+
+        listPseudoStep.add("init DPAlgorithm");
+        listPseudoStep.add("for each vertex k of graph");
+        listPseudoStep.add(" for each vertex i of graph");
+        listPseudoStep.add("  for each vertex j of graph");
+        listPseudoStep.add("    if i != j then");
+        listPseudoStep.add("      tmp = minDis[i][k] + minDis[k][j]");
+        listPseudoStep.add("        if minDis[i][k] > tmp then");
+        listPseudoStep.add("           minDis[i][k] = tmp");
         //need detail step
 
-        listDetailedStep = new DP_DetailedStep();
-        ((DP_DetailedStep) listDetailedStep).initStep();
+        listDetailedStep = new ArrayList<>();
+        listDetailedStep.add("create prepare 2-dimensional array minDis[n][n] (n is number of vertexes)\n" +
+                "set all minDis[i][j] to its i-j edge weight, other to infinite");
+
         initDP(graph);
         dynamicProgrammingSP(graph);
+    }
+
+    @Override
+    public void run() {
+        stepPointer = 0;
+        Scanner sc = new Scanner(System.in);
+        int a;
+
+        while (true){
+            System.out.println("----------------------------");
+            System.out.println("Detail: ");
+            System.out.println(listDetailedStep.get(stepPointer));
+
+            System.out.println("----------------------------");
+            System.out.println("Pseudo code:");
+            for (int j=0; j< listPseudoStep.size(); j++){
+                if (pseudoStepOrder.get(stepPointer) == j){
+                    System.out.println(listPseudoStep.get(j) + "  <==");
+                }else {
+                    System.out.println(listPseudoStep.get(j));
+                }
+            }
+
+
+            a = sc.nextInt();
+            if (a == 1){
+                System.out.println("next step");
+                stepPointer++;
+            }else if (a ==2 && stepPointer > 0){
+                System.out.println("back one step");
+                stepPointer--;
+            }else if (a == 0){
+                System.out.println("Break");
+                break;
+            }
+        }
+
+        System.out.println("End run");
     }
 
     public float getMinDistance(int start, int end){
