@@ -50,4 +50,8 @@ public class PseudoStep extends Step{
 //    public void backOneStep() {
 //        stepPointer--;
 //    }
+
+    public PseudoStep(String content) {
+        super(content);
+    }
 }

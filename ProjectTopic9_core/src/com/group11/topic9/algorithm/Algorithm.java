@@ -19,10 +19,10 @@ public abstract class Algorithm {
 //        return listDetailedStep;
 //    }
 
-    protected ArrayList<String>listPseudoStep;
+    protected ArrayList<PseudoStep>listPseudoStep;
     protected ArrayList<Integer>pseudoStepOrder;
 
-    protected ArrayList<String>listDetailedStep;
+    protected ArrayList<DetailedStep>listDetailedStep;
 
     protected int stepPointer;
 

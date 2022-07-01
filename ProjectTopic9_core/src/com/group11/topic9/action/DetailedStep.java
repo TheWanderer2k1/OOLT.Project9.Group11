@@ -36,4 +36,8 @@ public class DetailedStep extends Step{
 //    public void pause() {
 //
 //    }
+
+    public DetailedStep(String content) {
+        super(content);
+    }
 }
