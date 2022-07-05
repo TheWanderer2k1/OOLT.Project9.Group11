@@ -8,9 +8,9 @@ public class Main {
 
     public static void main(String[] args) {
 	// write your code here
-        Graph g;
-        g =  Graph_example.VD2();
-        g.setDirected(false);
-        g.showGraph();
+//        Graph g;
+//        g =  Graph_example.VD2();
+//        g.setDirected(false);
+//        g.showGraph();
     }
 }

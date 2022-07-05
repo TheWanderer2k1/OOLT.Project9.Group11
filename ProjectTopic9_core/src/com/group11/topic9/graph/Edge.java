@@ -1,5 +1,7 @@
 package com.group11.topic9.graph;
 
+import javafx.scene.shape.Line;
+
 import java.util.ArrayList;
 import java.util.Scanner;
 
@@ -13,13 +15,16 @@ public class Edge {
     private boolean isDirected;
     private float weight;
 
-    public Edge(Vertex from, Vertex to, ArrayList<Vertex> myVertex, boolean isWeighed, boolean isDirected, float weight) {
+    Line edgeLine;
+
+    public Edge(Vertex from, Vertex to, ArrayList<Vertex> myVertex, Line line,boolean isWeighed, boolean isDirected, float weight) {
         this.from = from;
         this.to = to;
         this.myVertex = myVertex;
         this.isWeighed = isWeighed;
         this.isDirected = isDirected;
         this.weight = weight;
+        this.edgeLine = line;
     }
 
     public Vertex getFrom() {
@@ -41,6 +46,15 @@ public class Edge {
 //    public boolean isDirected() {
 //        return isDirected;
 //    }
+
+
+    public Line getEdgeLine() {
+        return edgeLine;
+    }
+
+    public void setEdgeLine(Line edgeLine) {
+        this.edgeLine = edgeLine;
+    }
 
     public float getWeight() {
         return weight;
