@@ -12,7 +12,7 @@ import javafx.scene.shape.Circle;
 import java.util.ArrayList;
 import java.util.Scanner;
 
-public class DynamicProgramming extends Algorithm {         // a lot prob
+public class DynamicProgramming extends Algorithm {
 
     ArrayList<ArrayList<Float>> minDis = new ArrayList<>();
     ArrayList<ArrayList<Float>> initMatrix = new ArrayList<>();
@@ -256,10 +256,8 @@ public class DynamicProgramming extends Algorithm {         // a lot prob
 
         for (int j=0; j< listPseudoStep.size(); j++){
                 if (pseudoStepOrder.get(stepPointer) == j){
-                    //System.out.println(listPseudoStep.get(j).getContent() + "  <==");
                     str = str + listPseudoStep.get(j).getContent() + "  <==\n";
                 }else {
-                    //System.out.println(listPseudoStep.get(j).getContent());
                     str = str + listPseudoStep.get(j).getContent() + "\n";
                 }
             }

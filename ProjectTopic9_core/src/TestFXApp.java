@@ -69,7 +69,7 @@ public class TestFXApp extends Application {
         root.setLeft(boxLeft);
 
         Pane boxRight = new Pane();
-        boxRight.setPrefSize(100, 200);
+        boxRight.setPrefSize(600, 200);
         root.setRight(boxRight);
 
         Pane boxBottom = new Pane();
@@ -80,7 +80,7 @@ public class TestFXApp extends Application {
         boxTop.setPrefSize(600, 100);
         root.setTop(boxTop);
 
-        Scene newScene = new Scene(root, 600, 600);
+        Scene newScene = new Scene(root, 1200, 600);
         newScene.setFill(Color.ORANGE);
 
 
@@ -96,7 +96,7 @@ public class TestFXApp extends Application {
 //                textStatus.setFill(Color.RED);
 //            }
 //        });       vi du ve doi gia tri
-        boxRight.getChildren().add(textStatus);
+        boxTop.getChildren().add(textStatus);
 
         EventHandler<MouseEvent> mouseEventCreateVertex = new EventHandler<MouseEvent>() {
             @Override
@@ -190,7 +190,7 @@ public class TestFXApp extends Application {
                 }
 
             }
-        };
+        };  //tao do thi
 
         //design button
         Button button1 = new Button("Create");
@@ -202,6 +202,8 @@ public class TestFXApp extends Application {
 
             boxCenter.getChildren().clear();
             boxCenter.addEventFilter(MouseEvent.MOUSE_CLICKED, mouseEventCreateVertex);
+
+            boxRight.getChildren().clear();
 
             graphVertex = new ArrayList<>();
             graphEdge = new ArrayList<>();
@@ -248,7 +250,9 @@ public class TestFXApp extends Application {
                 boxCenter.getChildren().clear();
                 boxCenter.getChildren().addAll(defaultState);
 
-                Stage newWindow = new Stage();
+                boxRight.getChildren().clear();
+
+                //Stage newWindow = new Stage();
                 BorderPane newWindowRoot = new BorderPane();
 
                 GridPane matrix = new GridPane();
@@ -281,7 +285,7 @@ public class TestFXApp extends Application {
                 controlBox.getChildren().addAll(next, back);
                 newWindowRoot.setBottom(controlBox);
 
-                Scene windowScene = new Scene(newWindowRoot, 600, 300);
+                //Scene windowScene = new Scene(newWindowRoot, 600, 300);
 
                 matrix.setHgap(3);
                 matrix.setVgap(3);
@@ -306,7 +310,7 @@ public class TestFXApp extends Application {
                 matrix.add(verSign2, 0,g.getListVertex().size() + 2);
 
                 DynamicProgramming dp = new DynamicProgramming();
-                dp.executeAlgorithm(g);
+                dp.executeAlgorithm(g);         //chay thuat toan
 
 
                 for (int i = 1; i < g.getListVertex().size() + 1; i++){
@@ -373,8 +377,9 @@ public class TestFXApp extends Application {
                     message.setText(dp.getPseudoAndDetailStep(stepPointer));
                 });
 
-                newWindow.setScene(windowScene);
-                newWindow.show();
+                boxRight.getChildren().add(newWindowRoot);
+                //newWindow.setScene(windowScene);
+                //newWindow.show();
             }else
                 textStatus.setText("Chua tao xong graph");
 
@@ -386,7 +391,7 @@ public class TestFXApp extends Application {
         Button button4 = new Button("Run DJ");
         button4.setLayoutX(20);
         button4.setLayoutY(150);
-        //event
+        //event button4
         boxLeft.getChildren().add(button4);
 
 
@@ -394,7 +399,7 @@ public class TestFXApp extends Application {
         Button button5 = new Button("Run BF");
         button5.setLayoutY(200);
         button5.setLayoutX(20);
-        //event
+        //event button5
         boxLeft.getChildren().add(button5);
 
 
