@@ -12,9 +12,12 @@ public class TestDJ {
 
         Dijkstra dj = new Dijkstra();
         dj.executeAlgorithm(vd);
+        dj.run();
 
-        System.out.println(dj.getListPseudoStep().getStepIndex());
-        System.out.println(dj.getListPseudoStep().getListofStep());
-        dj.getListPseudoStep().run();
+
+
+//        System.out.println(dj.);
+//        System.out.println(dj.getListPseudoStep().getListofStep());
+//        dj.getListPseudoStep().run();
     }
 }

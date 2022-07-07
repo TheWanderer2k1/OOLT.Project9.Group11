@@ -4,12 +4,28 @@ import java.util.ArrayList;
 
 public abstract class  Step {
 
-    public abstract void run();
+    String content;
 
-    public abstract void pause();
+    public void setContent(String content) {
+        this.content = content;
+    }
 
-    public abstract void nextOneStep();
+    public String getContent() {
+        return content;
+    }
 
-    public abstract void backOneStep();
+    public Step(String content){
+        this.content = content;
+    }
+
+
+    //phần cũ
+//    public abstract void run();
+//
+//    public abstract void pause();
+//
+//    public abstract void nextOneStep();
+//
+//    public abstract void backOneStep();
 }
 

@@ -7,10 +7,7 @@ public class Vertex {
 
     private int pre;    //previous Vertex's ID
 
-
     private float dis;    //distance from Start Node to this vertex
-
-
 
 
     public int getId() {
@@ -33,9 +30,7 @@ public class Vertex {
         return dis;
     }
 
-//    public void setId(int id) {
-//        this.id = id;
-//    }
+
     public Vertex (){
         super();
     }
