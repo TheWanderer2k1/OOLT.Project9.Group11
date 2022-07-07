@@ -8,12 +8,12 @@ import com.group11.topic9.graph.Graph_example;
 
 public class testDP {
     public static void main(String[] args) {
-//        Graph vd = Graph_example.VD2();
-//        DynamicProgramming dp = new DynamicProgramming();
-//
-//        //vd.setDirected(false);
-//
-//        dp.executeAlgorithm(vd);
-//        dp.run();
+        Graph vd = Graph_example.VD2();
+        DynamicProgramming dp = new DynamicProgramming();
+
+        //vd.setDirected(false);
+
+        dp.executeAlgorithm(vd);
+        //dp.run();
     }
 }

@@ -17,6 +17,7 @@ public class Edge {
 
     Line edgeLine;
 
+
     public Edge(Vertex from, Vertex to, ArrayList<Vertex> myVertex, Line line,boolean isWeighed, boolean isDirected, float weight) {
         this.from = from;
         this.to = to;

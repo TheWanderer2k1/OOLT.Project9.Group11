@@ -5,7 +5,7 @@ import javafx.scene.shape.Circle;
 public class Vertex {
     private int id;
 
-    Circle verCircle;
+    Circle verCircle; // xam
 
     public void setVerCircle(Circle verCircle) {
         this.verCircle = verCircle;
