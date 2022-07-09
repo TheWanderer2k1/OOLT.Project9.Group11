@@ -3,6 +3,7 @@ import com.group11.topic9.graph.DPState;
 import com.group11.topic9.graph.Edge;
 import com.group11.topic9.graph.Graph;
 import com.group11.topic9.graph.Vertex;
+import javafx.animation.PauseTransition;
 import javafx.application.Application;
 import javafx.beans.InvalidationListener;
 import javafx.beans.property.ObjectProperty;
@@ -13,6 +14,7 @@ import javafx.scene.Group;
 import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
+import javafx.scene.control.Slider;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
@@ -28,6 +30,7 @@ import javafx.scene.text.FontWeight;
 import javafx.scene.text.Text;
 import javafx.scene.text.TextAlignment;
 import javafx.stage.Stage;
+import javafx.util.Duration;
 
 import java.util.ArrayList;
 
@@ -50,6 +53,8 @@ public class TestFXApp extends Application {
     boolean check;
 
     int stepPointer;
+
+    Double x1, y1, x2, y2, length;
 
     public static void main(String[] args) {
         launch(args);
@@ -152,9 +157,16 @@ public class TestFXApp extends Application {
                                 ArrayList<Vertex> groupVer = new ArrayList<>();
                                 groupVer.add(ver1);
                                 groupVer.add(ver2);
-
                                 check = true;
-                                e = new Edge(ver1, ver2, groupVer, line, true, true, 10f);
+
+                                x1 = ver1.getVerCircle().getCenterX();
+                                y1 = ver1.getVerCircle().getCenterY();
+                                x2 = ver2.getVerCircle().getCenterX();
+                                y2 = ver2.getVerCircle().getCenterY();
+                                length = Math.sqrt(Math.pow(x1 - x2, 2) + Math.pow(y1 - y2, 2));
+
+
+                                e = new Edge(ver1, ver2, groupVer, line, true, true, Math.round(length.floatValue())/10.0f);
                                 for (int i = 0; i < graphEdge.size(); i++){
                                     if (e.equals(graphEdge.get(i))) {
                                         //System.out.println("trùng cạnh");
@@ -218,7 +230,8 @@ public class TestFXApp extends Application {
             if (graphVertex != null && graphVertex.size() > 0) {
                 textStatus.setText("Finish create");
                 stateFinish = true;
-                System.out.println(button2.getLayoutX() + " - " + button2.getLayoutY());
+                state = 1;
+                //System.out.println(button2.getLayoutX() + " - " + button2.getLayoutY());
 
                 boxCenter.removeEventFilter(MouseEvent.MOUSE_CLICKED, mouseEventCreateVertex);
                 Node n;
@@ -252,12 +265,9 @@ public class TestFXApp extends Application {
 
                 boxRight.getChildren().clear();
 
-                //Stage newWindow = new Stage();
                 BorderPane newWindowRoot = new BorderPane();
 
                 GridPane matrix = new GridPane();
-                //matrix.setPrefSize(200, 200);
-                //matrix.setStyle("-fx-background-color:red;");
                 newWindowRoot.setCenter(matrix);
 
                 Pane messageStep = new Pane();
@@ -266,9 +276,9 @@ public class TestFXApp extends Application {
                 newWindowRoot.setRight(messageStep);
 
                 Text message = new Text("Pseudo and Detail step here");
-                message.setWrappingWidth(380);
-                message.setLayoutY(15);
-                message.setLayoutX(20);
+                message.setWrappingWidth(300);
+                //message.setLayoutY(10);
+                message.setLayoutX(15);
                 messageStep.getChildren().add(message);
 
                 Pane controlBox = new Pane();
@@ -279,13 +289,32 @@ public class TestFXApp extends Application {
                 Button next = new Button("Next");
                 next.setLayoutX(50);
                 next.setLayoutY(15);
-                Button back = new Button("Back");
-                back.setLayoutX(150);
-                back.setLayoutY(15);
-                controlBox.getChildren().addAll(next, back);
-                newWindowRoot.setBottom(controlBox);
 
-                //Scene windowScene = new Scene(newWindowRoot, 600, 300);
+                Button back = new Button("Back");
+                back.setLayoutX(100);
+                back.setLayoutY(15);
+
+                Button run = new Button("Run");
+                run.setLayoutX(150);
+                run.setLayoutY(15);
+
+                Button pause = new Button("Pause");
+                pause.setLayoutX(200);
+                pause.setLayoutY(15);
+
+                Slider speed = new Slider();
+                speed.setLayoutX(300);
+                speed.setLayoutY(15);
+                speed.setMin(0.1);
+                speed.setMax(2.0);
+                speed.setValue(0.5);
+                speed.setBlockIncrement(0.5);
+                speed.setShowTickLabels(true);
+                speed.setShowTickMarks(true);
+
+
+                controlBox.getChildren().addAll(next, back, run, pause, speed);
+                newWindowRoot.setBottom(controlBox);
 
                 matrix.setHgap(3);
                 matrix.setVgap(3);
@@ -323,6 +352,41 @@ public class TestFXApp extends Application {
 
                 stepPointer = 0;
 
+                //tao event o day
+                PauseTransition showAlgorithm = new PauseTransition(Duration.seconds(0.1));
+
+                showAlgorithm.setOnFinished(event -> {
+                    if (dp.getListState().get(stepPointer).getCurrentVertexes() != null ) {
+
+                        for (int i = 0; i < boxCenter.getChildren().size(); i++){
+                            if (boxCenter.getChildren().get(i).toString().contains("Circle"))
+                                ((Circle) boxCenter.getChildren().get(i)).setFill(Color.ORANGE);
+                        }
+
+                        for (int i = 0; i < dp.getListState().get(stepPointer).getCurrentVertexes().size(); i++)
+                            dp.getListState().get(stepPointer).getCurrentVertexes().get(i).getVerCircle().setFill(dp.getListState().get(stepPointer).getVertexPaints().get(i));
+
+                    }
+                    else if (((DPState) dp.getListState().get(stepPointer)).getI() != 999) {
+                        //System.out.println("change: " + ((DPState) dp.getListState().get(stepPointer)).getChangedValue());
+                        for (Node node : matrix.getChildren()){
+                            if (GridPane.getColumnIndex(node) != null && GridPane.getRowIndex(node) != null)
+                                if (GridPane.getColumnIndex(node) == ((DPState) dp.getListState().get(stepPointer)).getI() + 1 &&
+                                        GridPane.getRowIndex(node) == ((DPState) dp.getListState().get(stepPointer)).getJ() + 1){
+                                    ((Text) node).setText(String.valueOf(((DPState) dp.getListState().get(stepPointer)).getChangedValue()));
+                                    System.out.println(((DPState) dp.getListState().get(stepPointer)).getI() + "-" + ((DPState) dp.getListState().get(stepPointer)).getJ());
+                                    break;
+                                }
+                        }
+                    }
+                    message.setText(dp.getPseudoAndDetailStep(stepPointer));
+
+                    if (stepPointer < dp.getListState().size() - 1)
+                        stepPointer++;
+                    showAlgorithm.playFromStart();
+                });
+
+
                 next.setOnMouseClicked(eventNext -> {
                     if (stepPointer < dp.getListState().size() - 1)
                         stepPointer++;
@@ -350,7 +414,6 @@ public class TestFXApp extends Application {
                                 }
                         }
                     }
-
                     message.setText(dp.getPseudoAndDetailStep(stepPointer));
                     //dp.getPseudoAndDetailStep(stepPointer);
 
@@ -377,9 +440,25 @@ public class TestFXApp extends Application {
                     message.setText(dp.getPseudoAndDetailStep(stepPointer));
                 });
 
+                run.setOnMouseClicked(eventRun -> {
+                    showAlgorithm.play();
+                });
+
+                pause.setOnMouseClicked(eventPause -> {
+                    showAlgorithm.stop();
+                });
+
+//                test.setOnMouseClicked(event -> {
+//                    showAlgorithm.setDuration(Duration.millis(2000));
+//                });
+
+                speed.valueProperty().addListener((observableValue, oldVal, newVal) -> {
+                    showAlgorithm.setDuration(Duration.seconds((Double)newVal));
+                });
+
+
+
                 boxRight.getChildren().add(newWindowRoot);
-                //newWindow.setScene(windowScene);
-                //newWindow.show();
             }else
                 textStatus.setText("Chua tao xong graph");
 
@@ -401,9 +480,6 @@ public class TestFXApp extends Application {
         button5.setLayoutX(20);
         //event button5
         boxLeft.getChildren().add(button5);
-
-
-
 
 
         stage.setScene(newScene);
