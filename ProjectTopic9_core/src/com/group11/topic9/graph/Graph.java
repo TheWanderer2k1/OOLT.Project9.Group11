@@ -76,7 +76,16 @@ public class Graph {
         return false;
     }
 
-    public Vertex getVertex (int verID){    //get Vetex from ID
+    public Edge getEdgeByVer(Vertex ver1, Vertex ver2){
+        for (int i=0; i < this.listEdge.size(); i++){
+            if (this.getListEdge().get(i).getFrom() == ver1 && this.getListEdge().get(i).getTo() == ver2){
+                return this.getListEdge().get(i);
+            }
+        }
+        return null;
+    }
+
+    public Vertex getVerFromID (int verID){    //get Vetex from ID
         for (int i=0; i< this.getListVertex().size(); i++){
             if (this.getListVertex().get(i).getId() == verID){
                 return this.getListVertex().get(i);
@@ -104,10 +113,10 @@ public class Graph {
     }
 
     //todo: viet ham get weight (int ver1, int ver2
-    public float getWeight (Vertex verID1, Vertex verID2){
+    public float getWeight (Vertex ver1, Vertex ver2){
         for (int i=0; i<this.getListEdge().size();i++){
-            if (this.getListEdge().get(i).getFrom() == verID1
-            && this.getListEdge().get(i).getTo() == verID2){
+            if (this.getListEdge().get(i).getFrom() == ver1
+            && this.getListEdge().get(i).getTo() == ver2){
                 return this.getListEdge().get(i).getWeight();
             }
         }

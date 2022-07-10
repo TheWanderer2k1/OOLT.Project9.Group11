@@ -16,8 +16,8 @@ public class Main {
         ArrayList<Vertex> checkVertex = new ArrayList<Vertex>();
 
         Draw dr = new Draw();
-        Graph testGraph = dr.drawGraph();
-        testGraph.showGraph();
+        Graph g = dr.drawGraph();
+        g.showGraph();
 
         //ae test cac truong hop ben duoi
     }
