@@ -1,16 +1,11 @@
 package com.group11.topic9.algorithm.DynamicProgramming;
 
-import com.group11.topic9.action.DetailedStep;
-import com.group11.topic9.action.PseudoStep;
-import com.group11.topic9.algorithm.Algorithm;
+import com.group11.topic9.algorithm.*;
 import com.group11.topic9.graph.*;
-import javafx.scene.Node;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.Paint;
-import javafx.scene.shape.Circle;
 
 import java.util.ArrayList;
-import java.util.Scanner;
 
 public class DynamicProgramming extends Algorithm {
 
@@ -35,8 +30,13 @@ public class DynamicProgramming extends Algorithm {
 
         for (int i = 0; i < n; i++)
             for (int j = 0; j < n; j++) {
-                minDis.get(i).add(999f);
-                initMatrix.get(i).add(999f);
+                if (j == i) {
+                    minDis.get(i).add(0.0f);
+                    initMatrix.get(i).add(0.0f);
+                } else {
+                    minDis.get(i).add(999f);
+                    initMatrix.get(i).add(999f);
+                }
             }
 
 
@@ -87,10 +87,11 @@ public class DynamicProgramming extends Algorithm {
             currentVertex.add(g.getListVertex().get(i));
             currentVertex.add(g.getListVertex().get(j));
             currentVertex.add(g.getListVertex().get(k));
-            vertexPaint.add(Color.ORANGE);
-            vertexPaint.add(Color.ORANGE);
-            vertexPaint.add(Color.RED);
-            listState.add(new DPState(currentVertex, vertexPaint, 999, 999, 999f));
+            vertexPaint.add(Color.WHITE);
+            vertexPaint.add(Color.WHITE);
+
+            vertexPaint.add(Color.PINK);
+            listState.add(new DPState(currentVertex, vertexPaint, 999, 999, 999f));     //state[1]
 
             //i = 0;
             for (i = 0; i < numberVer; i++){
@@ -103,10 +104,10 @@ public class DynamicProgramming extends Algorithm {
                 currentVertex.add(g.getListVertex().get(k));
                 currentVertex.add(g.getListVertex().get(j));
                 currentVertex.add(g.getListVertex().get(i));
-                vertexPaint.add(Color.RED);
-                vertexPaint.add(Color.ORANGE);
+                vertexPaint.add(Color.PINK);
+                vertexPaint.add(Color.WHITE);
                 vertexPaint.add(Color.YELLOW);
-                listState.add(new DPState(currentVertex, vertexPaint,999, 999, 999f));
+                listState.add(new DPState(currentVertex, vertexPaint,999, 999, 999f));  //state[2]
 
                     //j = 0;
                     for (j = 0; j < numberVer; j++) {
@@ -120,9 +121,9 @@ public class DynamicProgramming extends Algorithm {
                         currentVertex.add(g.getListVertex().get(k));
                         currentVertex.add(g.getListVertex().get(i));
                         currentVertex.add(g.getListVertex().get(j));
-                        vertexPaint.add(Color.RED);
+                        vertexPaint.add(Color.PINK);
                         vertexPaint.add(Color.YELLOW);
-                        vertexPaint.add(Color.BLUE);
+                        vertexPaint.add(Color.LIGHTBLUE);
                         listState.add(new DPState(currentVertex, vertexPaint,999, 999, 999f));
 
 

@@ -1,10 +1,6 @@
 package com.group11.topic9.algorithm;
 
-import com.group11.topic9.action.DetailedStep;
-import com.group11.topic9.action.PseudoStep;
 import com.group11.topic9.graph.Graph;
-import com.group11.topic9.graph.State;
-import javafx.scene.Node;
 
 import java.util.ArrayList;
 
