@@ -19,13 +19,6 @@ public abstract class  Step {
     }
 
 
-    //phần cũ
-//    public abstract void run();
-//
-//    public abstract void pause();
-//
-//    public abstract void nextOneStep();
-//
-//    public abstract void backOneStep();
+
 }
 

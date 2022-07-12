@@ -17,7 +17,7 @@ public class Dijkstra extends  Algorithm{
     public static final float INFINITE = 1000;
 
     public void dijkstraProgram(Graph g){
-        int count = 0;
+        int count;
         //co canh di toi : ORANGE
         //dang xet      : LIGHTGREEN
         //da xet       : LIGHTBLUE
@@ -28,7 +28,7 @@ public class Dijkstra extends  Algorithm{
 
         ArrayList<Vertex> checkVertex = new ArrayList<Vertex>();
 
-        Vertex temp = new Vertex();
+        Vertex temp ;
 
         float d1 = 0;
         float d0 =0;
@@ -37,7 +37,7 @@ public class Dijkstra extends  Algorithm{
         float weid0d1=0;
 
         int startID= 0;
-        Vertex Start = new Vertex();
+        Vertex Start ;
         Start = g.getVerFromID(startID);
 
         for (int i=0; i<g.getListVertex().size(); i++){
@@ -52,7 +52,7 @@ public class Dijkstra extends  Algorithm{
         //init all of Vertex
         Start.setDis(0.0f);
         Start.setPre(0);
-        listState.add(new State());
+//        listState.add(new State());
         currentVertex = new ArrayList<>();        //TODO: STATE SOURCE VERTEX
         vertexPaint = new ArrayList<>();
         currentEdge = new ArrayList<>();
@@ -68,11 +68,11 @@ public class Dijkstra extends  Algorithm{
         pseudoStepOrder.add(0);                 //TODO: initSSSP & pre-populate PQ
         listDetailedStep.add(new DetailedStep("Vertex "+startID + " is the source vertex\n"
                 +"Set p[v]=0; d[v] = INF, but d["+startID+"]=0 " +
-                "\nPQ={  ("+checkVertex.get(1).getId()+", "+checkVertex.get(1).getPre()+"-"+checkVertex.get(1).getDis()+") , ("+
-                        checkVertex.get(2).getId()+", "+checkVertex.get(2).getPre()+"-"+checkVertex.get(2).getDis()+") , ("+
-                        checkVertex.get(3).getId()+", "+checkVertex.get(3).getPre()+"-"+checkVertex.get(3).getDis()+")...}"));
-
-
+                "\nPQ={  ("));
+//                        +checkVertex.get(1).getId()+", "+checkVertex.get(1).getPre()+"-"+checkVertex.get(1).getDis()+") , ("+
+//                        checkVertex.get(2).getId()+", "+checkVertex.get(2).getPre()+"-"+checkVertex.get(2).getDis()+") , ("+
+//                        checkVertex.get(3).getId()+", "+checkVertex.get(3).getPre()+"-"+checkVertex.get(3).getDis()+")...}"));
+                                                                    //todo: can them truong hop do thi co 1 dinh
 
         System.out.println("Check vertex");
         for (int i=0; i<checkVertex.size(); i++){
@@ -81,154 +81,165 @@ public class Dijkstra extends  Algorithm{
         System.out.println("-----------");
 
 
-
         if (g.numOutdegree(Start) == 0){
             System.out.println("Khong co dinh ke cua "+Start.getId());
         }else {
             while (checkVertex.size() != 0) {
-                count=0;
+                boolean check = true;
+                count = 0;
                 for (int t=0;t<checkVertex.size(); t++){
                     if (checkVertex.get(t).getDis() == INFINITE){
                         count++;
                     }
                 }
-                if (count == checkVertex.size()){
-                    for (int j = 0; j < checkVertex.size(); j++) {
-                        if (checkVertex.get(j) != null) {
-                            pseudoStepOrder.add(2);     //TODO:for each neighbor v of u = PQ.front(), PQ.pop() , relax and remove
-                            listDetailedStep.add(new DetailedStep("d[" + checkVertex.get(j).getId() + "]= "
-                                    + checkVertex.get(j).getDis() + " is visted and removed"));
-
-                            currentVertex = new ArrayList<>();          //TODO: STATE VISTITED VERTEX
-                            vertexPaint = new ArrayList<>();
-                            currentEdge = new ArrayList<>();
-                            edgePaint = new ArrayList<>();
-
-                            currentVertex.add(checkVertex.get(j));
-                            vertexPaint.add(Color.SKYBLUE);
-                            listState.add(new State(currentVertex, currentEdge, vertexPaint, edgePaint));
-
-                            checkVertex.remove(j);
-                        }
-                    }
-                }
-//                count++;
-                System.out.println("count = "+count);
-
-                boolean check = true;
 
 
-                for (int i = 0; i < g.getListVertex().size(); i++) {
-//
-//                    listState.add(new State());
+                for (int i = 0; i < g.getListVertex().size(); i++) {                  //todo : find extractMin
                     temp = this.extractMin(checkVertex);
-
+                    currentVertex = new ArrayList<>();
+                    vertexPaint = new ArrayList<>();
+                    currentEdge = new ArrayList<>();
+                    edgePaint = new ArrayList<>();
                     for (int l=0; l < g.getListVertex().size(); l++){
-                        if (g.getListVertex().get(l).getId() == temp.getId()){
-                            currentVertex = new ArrayList<>();                      //TODO: STATE EXTRACTMIN
-                            vertexPaint = new ArrayList<>();
-                            currentEdge = new ArrayList<>();
-                            edgePaint = new ArrayList<>();
+                        if (g.getListVertex().get(l).getId() == temp.getId()){        // todo: to mau LIGHTGREEN cho extractMin
 
                             currentVertex.add(g.getListVertex().get(l));
+                            currentEdge.add(new Edge());
+
                             vertexPaint.add(Color.LIGHTGREEN);
-                            listState.add(new State(currentVertex, currentEdge, vertexPaint, edgePaint));
+                            edgePaint.add(Color.BLACK);
+
                         }
                     }
-
-                    pseudoStepOrder.add(1);         //TODO: while !PQ.empty() //PQ is a Priority Queue
+                    pseudoStepOrder.add(1);                                         //TODO: while !PQ.empty() //PQ is a Priority Queue
                     if (checkVertex.size()>=2 ){
                         listDetailedStep.add(new DetailedStep("The current PQ={ ("
-                                +checkVertex.get(0).getId()+","+checkVertex.get(0).getPre()+"-"+checkVertex.get(0).getDis()+") , ("+
-                                +checkVertex.get(1).getId()+","+checkVertex.get(1).getPre()+"-"+checkVertex.get(1).getDis()+")...} \n"
-                                + "Exploring neighbor of u = "+temp.getId()+", d["+temp.getId()+"]="+ temp.getDis()));
+//                                Math.ceil(temp.getDis()*100.0)/100.0
+                                +checkVertex.get(0).getId()+","+checkVertex.get(0).getPre()+"-"+Math.ceil(checkVertex.get(0).getDis()*100.0)/100.0+") , ("
+                                +checkVertex.get(1).getId()+","+checkVertex.get(1).getPre()+"-"+Math.ceil(checkVertex.get(1).getDis()*100.0)/100.0+")...} \n"
+                                + "Exploring neighbor of u = "+temp.getId()+", d["+temp.getId()+"]="+ Math.ceil(temp.getDis()*100.0)/100.0));
                     }
+
 
 
                     int edgeProcess = 0;
-                    for (int j = 0; j < checkVertex.size(); j++) {
-                        if (g.hasEdgeFrom(temp, checkVertex.get(j)) &&  checkVertex.get(j) != temp) {
-                            edgeProcess++;
+                    for (int j = 0; j < g.getListVertex().size(); j++) {
 
-                            currentVertex = new ArrayList<>();          //TODO:STATE NEGIBOR OF CHECKING VERTEX
-                            vertexPaint   = new ArrayList<>();
-                            currentEdge   = new ArrayList<>();
-                            edgePaint     = new ArrayList<>();
+                        if (g.hasEdgeFrom(temp, g.getListVertex().get(j)) &&  g.getListVertex().get(j) != temp) {
+//                            edgeProcess++;
 
-                            currentVertex.add(checkVertex.get(j));
-                            currentEdge.add(g.getEdgeByVer(temp, checkVertex.get(j)));
-                            vertexPaint.add(Color.ORANGE);
-                            edgePaint.add(Color.ORANGE);
-                            listState.add(new State(currentVertex, currentEdge, vertexPaint, edgePaint));
+                            //vd : extractMin la A (id:0) ---> B (id:1)  => j=B(id)=1
+                            if (existInArr(g.getListVertex().get(j), checkVertex)){             //neu B tontai trong checkVertex (B chua bi loai)
 
-                            d0 = temp.getDis();
-                            weid0d1 = g.getWeight(temp, checkVertex.get(j));
-                            d1bd = checkVertex.get(j).getDis();
-                            sumD0D1 = d0+g.getWeight(temp, checkVertex.get(j));
+                                currentVertex.add(g.getListVertex().get(j));
+                                currentEdge.add(g.getEdgeByVer(temp, g.getListVertex().get(j)));
+                                vertexPaint.add(Color.ORANGE);
+                                edgePaint.add(Color.ORANGE);
 
-                            Relaxing(g, temp, checkVertex.get(j));
 
-                            d1=checkVertex.get(j).getDis();
-//                            if (sumD0D1 == d1){         //neu d[0]+w(0,1) == d[1]after --> co relax
-//                                currentVertex = new ArrayList<>();          //TODO:STATE NEGIBOR OF CHECKING VERTEX
-//                                vertexPaint = new ArrayList<>();
-//                                currentEdge = new ArrayList<>();
-//                                edgePaint = new ArrayList<>();
-//
-//                                currentVertex.add(checkVertex.get(j));
-//                                currentEdge.add(g.getEdgeByVer(temp, checkVertex.get(j)));
-//                                vertexPaint.add(Color.ORANGE);
-//                                edgePaint.add(Color.ORANGE);
-//                                listState.add(new State(currentVertex, currentEdge, vertexPaint, edgePaint));
-//                            }else{
-//                                currentVertex = new ArrayList<>();          //TODO:STATE NEGIBOR OF CHECKING VERTEX
-//                                vertexPaint = new ArrayList<>();
-//                                currentEdge = new ArrayList<>();
-//                                edgePaint = new ArrayList<>();
-//
-//                                currentVertex.add(checkVertex.get(j));
-////                                currentEdge.add(g.getEdgeByVer(temp, checkVertex.get(j)));
-//                                vertexPaint.add(Color.ORANGE);
-////                                edgePaint.add(Color.GRAY);
-//                                listState.add(new State(currentVertex, currentEdge, vertexPaint, edgePaint));
-//                            }
+                                d0 = temp.getDis();
+                                weid0d1 = g.getWeight(temp, g.getListVertex().get(j));
+                                d1bd = g.getListVertex().get(j).getDis();
+                                sumD0D1 = d0+g.getWeight(temp, g.getListVertex().get(j));
 
-                            pseudoStepOrder.add(2);              //for each neighbor v of u = PQ.front(), PQ.pop() , relax and remove
-                            if (checkVertex.size()>=2){
+                                Relaxing(g, temp, g.getListVertex().get(j));
+                                d1=g.getListVertex().get(j).getDis();
+
+
+                                pseudoStepOrder.add(2);              //for each neighbor v of u = PQ.front(), PQ.pop() , relax and remove
+                                if (checkVertex.size()>=2){
                                     if (sumD0D1 < d1bd){         //d0+ w(0, 1) < 1000
+                                        //neighbor co nam trong Checkvertex va da reset
 
-                                        listDetailedStep.add(new DetailedStep("Relax ("+temp.getId()+", "+checkVertex.get(j).getId()+") #edge process = "+edgeProcess
-                                                +"\nd["+checkVertex.get(j).getId()+"] = "+"d["+temp.getId()+"]+w("+temp.getId()+","+checkVertex.get(j).getId()+")"+"="
-                                                +d0+"+"+weid0d1+"="+d1
-                                                +"\nPQ={("+checkVertex.get(0).getId()+", "+checkVertex.get(0).getPre()+"-"+checkVertex.get(0).getDis()+"), ("+
-                                                +checkVertex.get(j).getId()+", "+checkVertex.get(j).getPre()+"-"+checkVertex.get(j).getDis()+")...}"));
+                                        listDetailedStep.add(new DetailedStep("Relax ("+temp.getId()+", "+g.getListVertex().get(j).getId()+") #edge process = "+edgeProcess
+                                                +"\nd["+g.getListVertex().get(j).getId()+"] = "+"d["+temp.getId()+"]+w("+temp.getId()+","+g.getListVertex().get(j).getId()+")"+"="
+//                                                +d0+"+"+weid0d1+"="+d1
+                                                +Math.ceil(d0*100.0)/100.0+"+"+Math.ceil(weid0d1*100.0)/100.0+"="+Math.ceil(d1*100.0)/100.0
+                                                +"\nPQ={("+g.getListVertex().get(0).getId()+", "+g.getListVertex().get(0).getPre()+"-"+g.getListVertex().get(0).getDis()+"), ("+
+                                                +g.getListVertex().get(j).getId()+", "+g.getListVertex().get(j).getPre()+"-"+Math.ceil(g.getListVertex().get(j).getDis()*100.0)/100.0+")...}"));
+//                                        Math.ceil(g.getListVertex().get(j).getDis()*100.0)/100.0
                                     }else {
-                                            //d[3]+w(3,2) > d[2], i.e. 1+2 > 3, so there is no change.
-                                        listDetailedStep.add(new DetailedStep("Relax ("+temp.getId()+", "+checkVertex.get(j).getId()+") #edge process = "+edgeProcess
-                                                +"\nd["+temp.getId()+"]+w("+temp.getId()+","+checkVertex.get(j).getId()+")"+">"+"d["+checkVertex.get(j).getId()+"] i.e. "
-                                                +d0+"+"+weid0d1+">"+d1bd +"\n, so there is no change"
-                                                +"\nPQ={("+checkVertex.get(0).getId()+", "+checkVertex.get(0).getPre()+"-"+checkVertex.get(0).getDis()+"), ("+
-                                                +checkVertex.get(j).getId()+", "+checkVertex.get(j).getPre()+"-"+checkVertex.get(j).getDis()+")...}"));
+                                        //neighbor nam trong CheckVertex nhung KHONG co Relax
+                                        //d[3]+w(3,2) > d[2], i.e. 1+2 > 3, so there is no change.
+                                        listDetailedStep.add(new DetailedStep("Relax ("+temp.getId()+", "+g.getListVertex().get(j).getId()+") #edge process = "+edgeProcess
+                                                +"\nd["+temp.getId()+"]+w("+temp.getId()+","+g.getListVertex().get(j).getId()+")"+">"+"d["+g.getListVertex().get(j).getId()+"] i.e. "
+                                                +d0+"+"+weid0d1+">"+d1bd +"\n, so there is no change 1"
+                                                +"\nPQ={("+checkVertex.get(0).getId()+", "+g.getListVertex().get(0).getPre()+"-"+g.getListVertex().get(0).getDis()+"), ("+
+                                                +g.getListVertex().get(j).getId()+", "+g.getListVertex().get(j).getPre()+"-"+g.getListVertex().get(j).getDis()+")...}"));
                                     }
-                            }else if (checkVertex.size() < 2) {
+                                }else if (g.getListVertex().size() < 2) {
                                     if (sumD0D1 < d1bd) {
                                         //co thay doi < 2 + PQ
-                                        listDetailedStep.add(new DetailedStep("Relax (" + temp.getId() + ", " + checkVertex.get(j).getId() + ") #edge process = " + edgeProcess
-                                            + "\nd[" + checkVertex.get(j).getId() + "] = " + "d[" + temp.getId() + "]+w(" + temp.getId() + "," + checkVertex.get(j).getId() + ")" + "="
-                                            + d0 + "+" + weid0d1 + "=" + d1
-                                            + "\nPQ={ (" + checkVertex.get(j).getId() + ", " + checkVertex.get(j).getPre() + "-" + checkVertex.get(j).getDis() + ")...}"));
+                                        listDetailedStep.add(new DetailedStep("Relax (" + temp.getId() + ", " + g.getListVertex().get(j).getId() + ") #edge process = " + edgeProcess
+                                                + "\nd[" + g.getListVertex().get(j).getId() + "] = " + "d[" + temp.getId() + "]+w(" + temp.getId() + "," + g.getListVertex().get(j).getId() + ")" + "="
+                                                + d0 + "+" + weid0d1 + "=" + d1
+                                                + "\nPQ={ (" + g.getListVertex().get(j).getId() + ", " + g.getListVertex().get(j).getPre() + "-" + g.getListVertex().get(j).getDis() + ")...}"));
                                     } else{
-                                           //d[3]+w(3,2) > d[2], i.e. 1+2 > 3, so there is no change.
-                                        listDetailedStep.add(new DetailedStep("Relax (" + temp.getId() + ", " + checkVertex.get(j).getId() + ") #edge process = " + edgeProcess
-                                                + "\nd[" + temp.getId() + "]+w(" + temp.getId() + "," + checkVertex.get(j).getId() + ")" + ">" + "d[" + checkVertex.get(j).getId() + "] i.e. "
-                                                + d0 + "+" + weid0d1 + ">" + d1bd + ", so there is no change"
-                                                + "\nPQ={ (" + checkVertex.get(j).getId() + ", " + checkVertex.get(j).getPre() + "-" + checkVertex.get(j).getDis() + ")...}"));
+                                        //d[3]+w(3,2) > d[2], i.e. 1+2 > 3, so there is no change.
+                                        listDetailedStep.add(new DetailedStep("Relax (" + temp.getId() + ", " + g.getListVertex().get(j).getId() + ") #edge process = " + edgeProcess
+                                                + "\nd[" + temp.getId() + "]+w(" + temp.getId() + "," + g.getListVertex().get(j).getId() + ")" + ">" + "d[" + g.getListVertex().get(j).getId() + "] i.e. "
+                                                + d0 + "+" + weid0d1 + ">" + d1bd + ", so there is no change 2"
+                                                + "\nPQ={ (" + g.getListVertex().get(j).getId() + ", " + g.getListVertex().get(j).getPre() + "-" + g.getListVertex().get(j).getDis() + ") }"));
 
                                     }
+                                }
+                            }else{
+                                currentVertex.add(g.getListVertex().get(j));
+                                currentEdge.add(g.getEdgeByVer(temp, g.getListVertex().get(j)));
+                                vertexPaint.add(Color.ORANGE);
+                                edgePaint.add(Color.LIGHTBLUE);
+                                //todo: noi den dinh ma da duoc xoa khoi checkVertex
+                                d0 = temp.getDis();
+                                weid0d1 = g.getWeight(temp, g.getListVertex().get(j));
+                                d1bd = g.getListVertex().get(j).getDis();
+                                sumD0D1 = d0+g.getWeight(temp, g.getListVertex().get(j));
+
+//                                Relaxing(g, temp, g.getListVertex().get(j));
+                                //sumD0D1 la d0 + w(0,1) luon > d1
+                                d1=g.getListVertex().get(j).getDis();
+
+                                if (checkVertex.size()>=2){
+                                    if (sumD0D1 < d1bd){         //d0+ w(0, 1) < 1000
+
+                                        listDetailedStep.add(new DetailedStep("Relax ("+temp.getId()+", "+g.getListVertex().get(j).getId()+") #edge process = "+edgeProcess
+                                                +"\nd["+g.getListVertex().get(j).getId()+"] = "+"d["+temp.getId()+"]+w("+temp.getId()+","+g.getListVertex().get(j).getId()+")"+"="
+                                                +d0+"+"+weid0d1+"="+sumD0D1
+                                                +"\nPQ={("+g.getListVertex().get(0).getId()+", "+g.getListVertex().get(0).getPre()+"-"+g.getListVertex().get(0).getDis()+"), ("
+                                                +g.getListVertex().get(j).getId()+", "+g.getListVertex().get(j).getPre()+"-"+Math.ceil(g.getListVertex().get(j).getDis()*100.0)/100.0+")...}"));
+//                                        Math.ceil(g.getListVertex().get(j).getDis()*100.0)/100.0
+                                    }else {
+                                        //d[3]+w(3,2) > d[2], i.e. 1+2 > 3, so there is no change.
+                                        listDetailedStep.add(new DetailedStep("Relax ("+temp.getId()+", "+g.getListVertex().get(j).getId()+") #edge process = "+edgeProcess
+                                                +"\nd["+temp.getId()+"]+w("+temp.getId()+","+g.getListVertex().get(j).getId()+")"+">"+"d["+g.getListVertex().get(j).getId()+"] i.e. "
+                                                +d0+"+"+weid0d1+">"+d1bd +"\n, so there is no change 3"
+                                                +"\nPQ={("+checkVertex.get(0).getId()+", "+g.getListVertex().get(0).getPre()+"-"+g.getListVertex().get(0).getDis()+")...}"));
+                                    }
+                                }else if (g.getListVertex().size() < 2) {
+                                    if (sumD0D1 < d1bd) {
+                                        //co thay doi < 2 + PQ
+                                        listDetailedStep.add(new DetailedStep("Relax (" + temp.getId() + ", " + g.getListVertex().get(j).getId() + ") #edge process = " + edgeProcess
+                                                + "\nd[" + g.getListVertex().get(j).getId() + "] = " + "d[" + temp.getId() + "]+w(" + temp.getId() + "," + g.getListVertex().get(j).getId() + ")" + "="
+                                                + d0 + "+" + weid0d1 + "=" + sumD0D1
+                                                + "\nPQ={ (" + g.getListVertex().get(j).getId() + ", " + g.getListVertex().get(j).getPre() + "-" + g.getListVertex().get(j).getDis() + ")...}"));
+                                    } else{
+                                        //d[3]+w(3,2) > d[2], i.e. 1+2 > 3, so there is no change.
+                                        listDetailedStep.add(new DetailedStep("Relax (" + temp.getId() + ", " + g.getListVertex().get(j).getId() + ") #edge process = " + edgeProcess
+                                                + "\nd[" + temp.getId() + "]+w(" + temp.getId() + "," + g.getListVertex().get(j).getId() + ")" + ">" + "d[" + g.getListVertex().get(j).getId() + "] i.e. "
+                                                + d0 + "+" + weid0d1 + ">" + d1bd + ", so there is no change 4"
+                                                + "\nPQ={ (" + g.getListVertex().get(j).getId() + ", " + g.getListVertex().get(j).getPre() + "-" + g.getListVertex().get(j).getDis() + ") }"));
+
+                                    }
+                                }
+
                             }
+
+
                         }
                         edgeProcess=0;
                     }
+
+
+
 
                     //remove extractMin
                     if (temp != null) {
@@ -238,20 +249,23 @@ public class Dijkstra extends  Algorithm{
                                 listDetailedStep.add(new DetailedStep("d["+checkVertex.get(j).getId()+"]= "
                                         +checkVertex.get(j).getDis()+" is visted and removed"));
 
-                                currentVertex = new ArrayList<>();          //TODO: STATE VISTITED VERTEX
-                                vertexPaint   = new ArrayList<>();
-                                currentEdge   = new ArrayList<>();
-                                edgePaint     = new ArrayList<>();
-
                                 currentVertex.add(checkVertex.get(j));
+                                currentEdge.add(new Edge());
                                 vertexPaint.add(Color.SKYBLUE);
-                                listState.add(new State(currentVertex, currentEdge, vertexPaint, edgePaint));
+                                edgePaint.add(Color.BLACK);
 
                                 checkVertex.remove(j);
                             }
                         }
                     }
+
+                    listState.add(new State(currentVertex, currentEdge, vertexPaint, edgePaint));
+
+
                 }
+
+
+
 
                 for (int i = 0; i < checkVertex.size(); i++) {
                     if (checkVertex.get(i).getDis() != INFINITE) {
@@ -263,7 +277,14 @@ public class Dijkstra extends  Algorithm{
                     break;
                 }
 
+
+
             }
+
+
+
+
+
 
 
 
@@ -303,6 +324,16 @@ public class Dijkstra extends  Algorithm{
         }
     }
 
+
+    public boolean existInArr( Vertex ver1, ArrayList<Vertex> checkVertex){
+//        boolean check = false;
+        for (int i=0; i< checkVertex.size(); i++){
+            if (checkVertex.get(i) == ver1){
+                return true;
+            }
+        }
+        return false;
+    }
 
     public Vertex extractMin (ArrayList<Vertex> checkVertex){
 
@@ -353,47 +384,13 @@ public class Dijkstra extends  Algorithm{
 
     @Override
     public void run() {
-//        stepPointer = 0;
-//        Scanner sc = new Scanner(System.in);
-//        int a;
-//
-//        while (true){
-//            System.out.println("<===================================================>");
-////            System.out.println("-----------------------------");
-////            System.out.println("Detail                       ");
-//            System.out.println(listDetailedStep.get(stepPointer).getContent());
-//
-//            System.out.println(" ");
-////            System.out.println("Pseudo code                  ");
-//            for (int j=0; j< listPseudoStep.size(); j++){
-//                if (pseudoStepOrder.get(stepPointer) == j){
-//                    System.out.println("==>"+listPseudoStep.get(j).getContent() );
-//                }else {
-//                    System.out.println("   "+listPseudoStep.get(j).getContent());
-//                }
-//            }
-//            System.out.println("<===================================================>");
-//            a = sc.nextInt();
-//
-//            if (a == 1 && stepPointer < pseudoStepOrder.size() - 1){
-////                System.out.println("next step");
-//                stepPointer++;
-//            }else if (a ==2 && stepPointer > 0){
-//                System.out.println("back one step");
-//                stepPointer--;
-//            }else if (a == 0){
-//                System.out.println("Break");
-//                break;
-//            }
-//        }
-//        System.out.println("End run");
+
     }
 
 
     public ArrayList<State> getListState(){
         return listState;
     }
-
 
     public String getPseudoAndDetailStep(int stepPointer) {
         String str = "";

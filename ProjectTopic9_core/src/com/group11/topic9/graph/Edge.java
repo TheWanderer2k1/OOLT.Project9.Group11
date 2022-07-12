@@ -25,6 +25,10 @@ public class Edge {
         this.edgeLine = edgeLine;
     }
 
+    public  Edge(){
+        super();
+    }
+
     //Constructor
     public Edge(Vertex from, Vertex to, ArrayList<Vertex> myVertex, boolean isWeighed, boolean isDirected, float weight) {
         this.from = from;

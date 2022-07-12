@@ -4,6 +4,7 @@ import com.group11.topic9.algorithm.Dijkstra;
 import com.group11.topic9.graph.Edge;
 import com.group11.topic9.graph.Graph;
 import com.group11.topic9.graph.Vertex;
+import javafx.animation.PauseTransition;
 import javafx.application.Application;
 import javafx.beans.InvalidationListener;
 import javafx.beans.property.ObjectProperty;
@@ -14,6 +15,7 @@ import javafx.scene.Group;
 import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
+import javafx.scene.control.Slider;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
@@ -29,6 +31,7 @@ import javafx.scene.text.FontWeight;
 import javafx.scene.text.Text;
 import javafx.scene.text.TextAlignment;
 import javafx.stage.Stage;
+import javafx.util.Duration;
 
 import java.util.ArrayList;
 
@@ -42,6 +45,11 @@ public class TestFXApp extends Application {
     ArrayList<Vertex> graphVertex;
     ArrayList<Edge> graphEdge;
 
+    ArrayList<ArrayList<Paint>> abc ;
+
+    ArrayList<ArrayList<Paint>> def;
+
+
     Graph g;
     Vertex ver1, ver2;
     Edge e;
@@ -49,9 +57,16 @@ public class TestFXApp extends Application {
     Node n;
     ArrayList<Node> defaultState = new ArrayList<>();
 
+//    ArrayList<Node> currentState = new ArrayList<>();
+
     boolean check;
 
     int stepPointer;
+
+    int a;
+
+    int h; //dung de test
+
 
     public static void main(String[] args) {
         launch(args);
@@ -112,8 +127,8 @@ public class TestFXApp extends Application {
                     circle.setCenterY(event.getY());
                     circle.setCenterX(event.getX());
                     circle.setRadius(15);
-                    circle.setFill(Color.LIGHTGREY);
-                    circle.setStroke(Color.GRAY);
+                    circle.setFill(Color.WHITE);
+                    circle.setStroke(Color.BLACK);
                     circle.setStrokeWidth(2);
 
                     circle.setOnMouseClicked(eventOnVertex -> {
@@ -135,7 +150,7 @@ public class TestFXApp extends Application {
                             line.setEndX(circle.getCenterX());
                             line.setEndY(circle.getCenterY());
                             line.setStrokeWidth(3);
-                            line.setStroke(Color.GRAY);
+                            line.setStroke(Color.BLACK);
 
 
                             for (int i = 0; i < graphVertex.size(); i++){
@@ -160,7 +175,8 @@ public class TestFXApp extends Application {
                                 double Y = Math.abs(Y1-Y2);
                                 double length=0;
                                 length = Math.sqrt(Math.pow(X, 2) + Math.pow(Y, 2));
-
+//                                if()
+//arrow
                                 e = new Edge(ver1, ver2, groupVer, line, true, true, (float) length);
                                 for (int i = 0; i < graphEdge.size(); i++){
                                     if (e.equals(graphEdge.get(i))) {
@@ -270,6 +286,9 @@ public class TestFXApp extends Application {
 
                 boxRight.getChildren().clear();
 
+                abc = new ArrayList<>();
+                def = new ArrayList<>();
+
                 BorderPane newWindowRoot = new BorderPane();
 
                 Pane messageStep = new Pane();
@@ -289,98 +308,200 @@ public class TestFXApp extends Application {
                 Button next = new Button("Next");
                 next.setLayoutX(50);
                 next.setLayoutY(15);
+
                 Button back = new Button("Back");
-                back.setLayoutX(150);
+                back.setLayoutX(100);
                 back.setLayoutY(15);
-                controlBox.getChildren().addAll(next, back);
+
+                Button run = new Button("run");
+                run.setLayoutX(150);
+                run.setLayoutY(15);
+
+                Button pause = new Button("pause");
+                pause.setLayoutX(200);
+                pause.setLayoutY(15);
+
+                Slider speed = new Slider();
+                speed.setLayoutX(300);
+                speed.setLayoutY(15);
+                speed.setMin(0.1);
+                speed.setMax(2.0);
+                speed.setValue(0.5);
+                speed.setBlockIncrement(0.5);
+                speed.setShowTickLabels(true);
+                speed.setShowTickMarks(true);
+
+                controlBox.getChildren().addAll(next, back, run, pause, speed);
                 newWindowRoot.setBottom(controlBox);
 
                 Dijkstra dj = new Dijkstra();
                 dj.executeAlgorithm(g);
 
-                stepPointer = 0;
+                stepPointer = 1;
+                a = -1;
+//                for (int i=0; i<dj.getListState().size(); i++){
+//                    System.out.println("size "+i+" : "+dj.getListState().get(i).getCurrentVertexes().size());
+//                }
+
+                h = 0;
 
                 next.setOnMouseClicked(eventNext -> {
 
-                    if (stepPointer < dj.getListState().size() - 1)
-                        stepPointer++;
-                        System.out.println("STEP POINTER = "+ stepPointer);
-                    //VERTEXS
-                    if (dj.getListState().get(stepPointer).getCurrentVertexes() != null
-                            &&dj.getListState().get(stepPointer).getCurrentEdges() != null ) {
+                    //khi o cuoi cua list
+                    if ( h == abc.size()) {
+                        abc.add(new ArrayList<>());
+                        def.add(new ArrayList<>());
 
-//                        for (int i = 0; i < boxCenter.getChildren().size(); i++){
-//                            if (boxCenter.getChildren().get(i).toString().contains("Circle"))
-//                                ((Circle) boxCenter.getChildren().get(i)).setFill(Color.LIGHTGREY);
-//                        }
-
-                        for (int i = 0; i < boxCenter.getChildren().size(); i++){
+                        //TODO: luu mau do thi hien tai
+                        for (int i = 0; i < boxCenter.getChildren().size(); i++) {
                             if (boxCenter.getChildren().get(i).toString().contains("Circle"))
-                                ((Circle) boxCenter.getChildren().get(i)).setFill(Color.LIGHTGREY);
-                            else if (boxCenter.getChildren().get(i).toString().contains("Line"))
-                                ((Line) boxCenter.getChildren().get(i)).setStroke(Color.GRAY);
-                        }
-
-                        for (int i = 0; i < dj.getListState().get(stepPointer).getCurrentVertexes().size(); i++) {
-                            dj.getListState().get(stepPointer).getCurrentVertexes().get(i).getVerCircle().setFill(dj.getListState().get(stepPointer).getVertexPaints().get(i));
-                        }
-                        for (int i = 0; i < dj.getListState().get(stepPointer).getCurrentEdges().size(); i++) {
-                            dj.getListState().get(stepPointer).getCurrentEdges().get(i).getEdgeLine().setStroke(dj.getListState().get(stepPointer).getEdgePaints().get(i));
+                                abc.get(h).add(((Circle) boxCenter.getChildren().get(i)).getFill());
+                            if (boxCenter.getChildren().get(i).toString().contains("Line"))
+                                def.get(h).add(((Line) boxCenter.getChildren().get(i)).getStroke());
                         }
                     }
 
+
+                    if (stepPointer < dj.getListState().size() - 1
+                            && a == dj.getListState().get(stepPointer).getCurrentVertexes().size()-1) {
+                        stepPointer++;
+                        System.out.println("New state step : "+stepPointer);
+                        a = -1;
+                    }
+                    if (a < dj.getListState().get(stepPointer).getCurrentVertexes().size()-1){
+                        a++;
+                        h++;
+                    }
+
+                    if (dj.getListState().get(stepPointer).getCurrentVertexes() != null
+                            &&dj.getListState().get(stepPointer).getCurrentEdges() != null ) {
+                        for (int j=a; j>=0; j--){
+                            if (dj.getListState().get(stepPointer).getCurrentVertexes().get(j).getVerCircle().getFill() != Color.SKYBLUE){
+                                dj.getListState().get(stepPointer).getCurrentVertexes().get(j).getVerCircle().setFill(dj.getListState().get(stepPointer).getVertexPaints().get(j));
+                            }
+                            if (dj.getListState().get(stepPointer).getCurrentEdges().get(j).getWeight() != 0){
+                                dj.getListState().get(stepPointer).getCurrentEdges().get(j).getEdgeLine().setStroke(dj.getListState().get(stepPointer).getEdgePaints().get(j));
+                            }
+
+                            if (a == dj.getListState().get(stepPointer).getCurrentVertexes().size()-1
+                                    && j==0){
+                                break;
+                            }
+                        }
+
+                        System.out.println("\nh = "+h);
+                        System.out.println("a = "+a);
+                        System.out.println("st= "+stepPointer);
+                    }
+                    System.out.println();
                     message.setText(dj.getPseudoAndDetailStep(stepPointer));
                     dj.getPseudoAndDetailStep(stepPointer);
                 });
 
 
                 back.setOnMouseClicked(eventBack -> {
-                    if (stepPointer > 0)
-                        stepPointer--;
-                        System.out.println("STEP POINTER = "+ stepPointer);
-                    //VERTEXS
-                    if (dj.getListState().get(stepPointer).getCurrentVertexes() != null ) {
+                    if (h > 0 ) {
+                        h--;
 
-                        for (int i = 0; i < boxCenter.getChildren().size(); i++){
+                        int tmpV = 0;
+                        int tmpE = 0;
+                        for (int i = 0; i < boxCenter.getChildren().size(); i++) {
+                            if (boxCenter.getChildren().get(i).toString().contains("Circle")) {
+                                ((Circle) boxCenter.getChildren().get(i)).setFill(abc.get(h).get(tmpV));
+                                tmpV++;
+                            }
+
+                            if (boxCenter.getChildren().get(i).toString().contains("Line")) {
+                                ((Line) boxCenter.getChildren().get(i)).setStroke(def.get(h).get(tmpE));
+                                tmpE++;
+                            }
+                        }
+
+                        if (a == 0 && stepPointer > 0) {
+                            stepPointer--;
+                            System.out.println("new Step " + stepPointer);
+                            a = dj.getListState().get(stepPointer).getCurrentVertexes().size() - 1;
+                        } else if (a > 0) {
+                            a--;
+                            System.out.println("Step " + stepPointer);
+                        }
+                        System.out.println("\nh = " + h);
+                        System.out.println("a = " + a);
+                        System.out.println("st= " + stepPointer);
+                        System.out.println("soSt=" + dj.getListState().size());
+                    }
+//                    message.setText(dj.getPseudoAndDetailStep(h));
+//                    dj.getPseudoAndDetailStep(h);
+                });
+
+                PauseTransition showAlgorithm = new PauseTransition(Duration.seconds(0.1));
+
+                showAlgorithm.setOnFinished(actionEvent -> {
+
+                    if (h == abc.size()) {
+                        abc.add(new ArrayList<>());
+                        def.add(new ArrayList<>());
+
+                        //TODO: luu mau do thi hien tai
+                        for (int i = 0; i < boxCenter.getChildren().size(); i++) {
                             if (boxCenter.getChildren().get(i).toString().contains("Circle"))
-                                ((Circle) boxCenter.getChildren().get(i)).setFill(Color.LIGHTGREY);
-                            else if (boxCenter.getChildren().get(i).toString().contains("Line"))
-                                ((Line) boxCenter.getChildren().get(i)).setStroke(Color.GRAY);
-                        }
-
-                        for (int i = 0; i < dj.getListState().get(stepPointer).getCurrentVertexes().size(); i++) {
-                            dj.getListState().get(stepPointer).getCurrentVertexes().get(i).getVerCircle().setFill(dj.getListState().get(stepPointer).getVertexPaints().get(i));
-                        }
-                        for (int i = 0; i < dj.getListState().get(stepPointer).getCurrentEdges().size(); i++) {
-                            dj.getListState().get(stepPointer).getCurrentEdges().get(i).getEdgeLine().setStroke(dj.getListState().get(stepPointer).getEdgePaints().get(i));
-                        }
-
-                        for (int i = 0; i < dj.getListState().get(stepPointer).getCurrentVertexes().size(); i++) {
-                            dj.getListState().get(stepPointer).getCurrentVertexes().get(i).getVerCircle().setFill(dj.getListState().get(stepPointer).getVertexPaints().get(i));
+                                abc.get(h).add(((Circle) boxCenter.getChildren().get(i)).getFill());
+                            if (boxCenter.getChildren().get(i).toString().contains("Line"))
+                                def.get(h).add(((Line) boxCenter.getChildren().get(i)).getStroke());
                         }
                     }
 
-                    //EDGES
-//                    if (dj.getListState().get(stepPointer).getCurrentEdges() != null ) {
-//
-//                        for (int i = 0; i < boxCenter.getChildren().size(); i++){
-//                            if (boxCenter.getChildren().get(i).toString().contains("Edge"))
-//                                ((Line) boxCenter.getChildren().get(i)).setStroke(Color.GRAY);
-//                        }
-//
-//                        for (int i = 0; i < dj.getListState().get(stepPointer).getCurrentEdges().size(); i++) {
-//                            dj.getListState().get(stepPointer).getCurrentEdges().get(i).getEdgeLine().setStroke(dj.getListState().get(stepPointer).getEdgePaints().get(i));
-//                        }
-//                    }
+                    if (stepPointer < dj.getListState().size() - 1
+                            && a == dj.getListState().get(stepPointer).getCurrentVertexes().size()-1) {
+                        stepPointer++;
+                        System.out.println("New state step : "+stepPointer);
+                        a = -1;
+                    }
+
+                    if (a < dj.getListState().get(stepPointer).getCurrentVertexes().size()-1){
+                        a++;
+                        h++;
+                    }
+
+                    if (dj.getListState().get(stepPointer).getCurrentVertexes() != null
+                            &&dj.getListState().get(stepPointer).getCurrentEdges() != null ) {
 
 
-//                    else if (((DPState) dp.getListState().get(stepPointer)).getI() != 999){
-//                        //mada dekimasen
-//                    }
 
-                    message.setText(dj.getPseudoAndDetailStep(stepPointer));
+                        for (int j=a; j>=0; j--){
+                            if (dj.getListState().get(stepPointer).getCurrentVertexes().get(j).getVerCircle().getFill() != Color.SKYBLUE){
+                                dj.getListState().get(stepPointer).getCurrentVertexes().get(j).getVerCircle().setFill(dj.getListState().get(stepPointer).getVertexPaints().get(j));
+                            }
+//                               dj.getListState().get(stepPointer).getCurrentVertexes().get(j).getVerCircle().setFill(dj.getListState().get(stepPointer).getVertexPaints().get(j));
+                            if (dj.getListState().get(stepPointer).getCurrentEdges().get(j).getWeight() != 0){
+                                dj.getListState().get(stepPointer).getCurrentEdges().get(j).getEdgeLine().setStroke(dj.getListState().get(stepPointer).getEdgePaints().get(j));
+                            }
+                            if (a == dj.getListState().get(stepPointer).getCurrentVertexes().size()-1
+                                    && j==0){
+                                break;
+                            }
+                        }
+
+                        System.out.println("\nh = "+h);
+                        System.out.println("a = "+a);
+                        System.out.println("st= "+stepPointer);
+                    }
+
+                    showAlgorithm.playFromStart();
                 });
 
+
+                run.setOnMouseClicked(mouseEvent -> {
+                    showAlgorithm.play();
+                });
+
+                pause.setOnMouseClicked(mouseEvent -> {
+                    showAlgorithm.stop();
+                });
+
+                speed.valueProperty().addListener((observableValue, oldVal, newVal) -> {
+                    showAlgorithm.setDuration(Duration.seconds((Double) newVal));
+                });
                 boxRight.getChildren().add(newWindowRoot);
 
             }else
@@ -396,9 +517,6 @@ public class TestFXApp extends Application {
         button5.setLayoutX(20);
         //event button5
         boxLeft.getChildren().add(button5);
-
-
-
 
 
         stage.setScene(newScene);
