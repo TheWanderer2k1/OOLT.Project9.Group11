@@ -5,10 +5,14 @@ import com.group11.topic9.graph.Graph;
 import com.group11.topic9.graph.Vertex;
 import javafx.animation.PauseTransition;
 import javafx.application.Application;
+import javafx.beans.InvalidationListener;
+import javafx.collections.ListChangeListener;
+import javafx.collections.ObservableList;
 import javafx.event.EventHandler;
 import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
+import javafx.scene.control.ComboBox;
 import javafx.scene.control.Slider;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.BorderPane;
@@ -21,7 +25,7 @@ import javafx.scene.text.Text;
 import javafx.stage.Stage;
 import javafx.util.Duration;
 
-import java.util.ArrayList;
+import java.util.*;
 
 public class TestFXApp extends Application {
     int state = 1;
@@ -59,11 +63,12 @@ public class TestFXApp extends Application {
         root.setCenter(boxCenter);
 
         Pane boxLeft = new Pane();
-        boxLeft.setPrefSize(100, 200);
+        boxLeft.setPrefSize(100, 400);
+        //boxLeft.setStyle("-fx-background-color: azure;");
         root.setLeft(boxLeft);
 
         Pane boxRight = new Pane();
-        boxRight.setPrefSize(600, 200);
+        boxRight.setPrefSize(600, 400);
         root.setRight(boxRight);
 
         Pane boxBottom = new Pane();
@@ -75,7 +80,6 @@ public class TestFXApp extends Application {
         root.setTop(boxTop);
 
         Scene newScene = new Scene(root, 1200, 600);
-        //newScene.setFill(Color.ORANGE);
 
 
         Text textStatus = new Text();
@@ -83,13 +87,6 @@ public class TestFXApp extends Application {
         textStatus.setLayoutY(50);
         textStatus.setText("Status");
         textStatus.setWrappingWidth(90);
-//        textStatus.textProperty().addListener(new ChangeListener<String>() {
-//            @Override
-//            public void changed(ObservableValue<? extends String> observableValue, String oldStr, String newStr) {
-//                System.out.println(oldStr + " and " + newStr);
-//                textStatus.setFill(Color.RED);
-//            }
-//        });       vi du ve doi gia tri
         boxTop.getChildren().add(textStatus);
 
         EventHandler<MouseEvent> mouseEventCreateVertex = event -> {
@@ -97,7 +94,6 @@ public class TestFXApp extends Application {
             for (int i = 0; i < boxCenter.getChildren().size(); i++){
                 n = boxCenter.getChildren().get(i);
                 if (n.getLayoutBounds().contains(event.getX(), event.getY()) && n.toString().contains("Circle")){
-                    //System.out.println("chọn đỉnh");
                     textStatus.setText("chọn đỉnh " + n.getId());
                     check = false;
                     break;
@@ -122,10 +118,10 @@ public class TestFXApp extends Application {
                         line = new Line();
                         line.setStartX(circle.getCenterX());
                         line.setStartY(circle.getCenterY());
-                        for (int i = 0; i < graphVertex.size(); i++){
-                            if (circle.equals(graphVertex.get(i).getVerCircle())){
+                        for (Vertex vertex : graphVertex) {
+                            if (circle.equals(vertex.getVerCircle())) {
                                 System.out.println("set start");
-                                ver1 = graphVertex.get(i);
+                                ver1 = vertex;
                             }
                         }
 
@@ -137,10 +133,10 @@ public class TestFXApp extends Application {
                         line.setStrokeWidth(3);
                         line.setStroke(Color.BLACK);
 
-                        for (int i = 0; i < graphVertex.size(); i++){
-                            if (circle.equals(graphVertex.get(i).getVerCircle())){
+                        for (Vertex vertex : graphVertex) {
+                            if (circle.equals(vertex.getVerCircle())) {
                                 System.out.println("set end");
-                                ver2 = graphVertex.get(i);
+                                ver2 = vertex;
                             }
                         }
                         if (ver1.getId() != ver2.getId()) {
@@ -157,8 +153,8 @@ public class TestFXApp extends Application {
 
 
                             e = new Edge(ver1, ver2, groupVer, line, true, true, Math.round(length.floatValue())/10.0f);
-                            for (int i = 0; i < graphEdge.size(); i++){
-                                if (e.equals(graphEdge.get(i))) {
+                            for (Edge edge : graphEdge) {
+                                if (e.equals(edge)) {
                                     textStatus.setText("trùng cạnh");
                                     check = false;
                                     break;
@@ -220,7 +216,6 @@ public class TestFXApp extends Application {
                 textStatus.setText("Finish create");
                 stateFinish = true;
                 state = 1;
-                //System.out.println(button2.getLayoutX() + " - " + button2.getLayoutY());
 
                 boxCenter.removeEventFilter(MouseEvent.MOUSE_CLICKED, mouseEventCreateVertex);
                 Node n;
@@ -278,7 +273,7 @@ public class TestFXApp extends Application {
                 Text message = new Text("Pseudo and Detail step here");
                 message.setWrappingWidth(300);
                 //message.setLayoutY(10);
-                message.setLayoutX(15);
+                message.setLayoutX(17);
                 messageStep.getChildren().add(message);
 
                 Pane controlBox = new Pane();
@@ -433,9 +428,7 @@ public class TestFXApp extends Application {
                             dp.getListState().get(stepPointer).getCurrentVertexes().get(i).getVerCircle().setFill(dp.getListState().get(stepPointer).getVertexPaints().get(i));
 
                     }
-                    else if (((DPState) dp.getListState().get(stepPointer)).getI() != 999){
-                        //mada dekimasen
-                    }
+
 
                     message.setText(dp.getPseudoAndDetailStep(stepPointer));
                 });
@@ -447,10 +440,6 @@ public class TestFXApp extends Application {
                 pause.setOnMouseClicked(eventPause -> {
                     showAlgorithm.stop();
                 });
-
-//                test.setOnMouseClicked(event -> {
-//                    showAlgorithm.setDuration(Duration.millis(2000));
-//                });
 
                 speed.valueProperty().addListener((observableValue, oldVal, newVal) -> {
                     showAlgorithm.setDuration(Duration.seconds((Double)newVal));
@@ -486,6 +475,7 @@ public class TestFXApp extends Application {
         button6.setLayoutX(100);
         button6.setLayoutY(20);
         button6.setOnMouseClicked(eventButton6 -> {
+            boxCenter.removeEventFilter(MouseEvent.MOUSE_CLICKED, mouseEventCreateVertex);
             boxRight.getChildren().clear();
             boxCenter.getChildren().clear();
             graphVertex = new ArrayList<>();
@@ -636,11 +626,6 @@ public class TestFXApp extends Application {
         });
         boxBottom.getChildren().add(button6);
 
-//        Button button7 = new Button("Example 02");
-//        button7.setLayoutX(200);
-//        button7.setLayoutY(20);
-//
-//        boxBottom.getChildren().add(button7);
 
         stage.setScene(newScene);
         stage.show();

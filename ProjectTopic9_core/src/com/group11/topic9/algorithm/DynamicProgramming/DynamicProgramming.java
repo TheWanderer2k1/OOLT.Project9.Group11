@@ -63,8 +63,6 @@ public class DynamicProgramming extends Algorithm {
             initMatrix.get(from).set(to, e.getWeight());
         }
 
-        //initMatrix.addAll(minDis);
-
         pseudoStepOrder.add(0);
         //create prepare 2-dimensional array minDis[n][n] \\n is number of vertexes
         //set all minDis[i][j] to its i-j edge weight, other to infinite
@@ -191,57 +189,57 @@ public class DynamicProgramming extends Algorithm {
         dynamicProgrammingSP(graph);
     }
 
-    @Override
-    public void run() {
-//        stepPointer = 0;
-//        Scanner sc = new Scanner(System.in);
-//        int a;
-//
-//        while (true){
-//            System.out.println("----------------------------");
-//            System.out.println("Detail: ");
-//            System.out.println(listDetailedStep.get(stepPointer).getContent());
-//
-//            if (listState.get(stepPointer).getCurrentVertexes() != null ) {
-//                System.out.println(listState.get(stepPointer).getCurrentVertexes().get(0).getId());
-//            }
-//            else if (((DPState) listState.get(stepPointer)).getI() != 999)
-//                    System.out.println( "change: " + ((DPState) listState.get(stepPointer)).getChangedValue());
-//
-//
-//            System.out.println("----------------------------");
-//            System.out.println("Pseudo code:");
-//            for (int j=0; j< listPseudoStep.size(); j++){
-//                if (pseudoStepOrder.get(stepPointer) == j){
-//                    System.out.println(listPseudoStep.get(j).getContent() + "  <==");
-//                }else {
-//                    System.out.println(listPseudoStep.get(j).getContent());
-//                }
-//            }
-//
-//
-//            a = sc.nextInt();
-//            if (a == 1){
-//                System.out.println("next step");
-//                stepPointer++;
-//            }else if (a ==2 && stepPointer > 0){
-//                System.out.println("back one step");
-//                stepPointer--;
-//            }else if (a == 0){
-//                System.out.println("Break");
-//                break;
-//            }
-//        }
-//
-//        System.out.println("End run");
-//        for (int i = 0; i < listState.size(); i++){
-//            listState.get(stepPointer).getCurrentVertexes().get(i).getVerCircle().setFill(listState.get(stepPointer).getVertexPaints().get(i));
-//        }
-    }
+//    @Override
+//    public void run() {
+////        stepPointer = 0;
+////        Scanner sc = new Scanner(System.in);
+////        int a;
+////
+////        while (true){
+////            System.out.println("----------------------------");
+////            System.out.println("Detail: ");
+////            System.out.println(listDetailedStep.get(stepPointer).getContent());
+////
+////            if (listState.get(stepPointer).getCurrentVertexes() != null ) {
+////                System.out.println(listState.get(stepPointer).getCurrentVertexes().get(0).getId());
+////            }
+////            else if (((DPState) listState.get(stepPointer)).getI() != 999)
+////                    System.out.println( "change: " + ((DPState) listState.get(stepPointer)).getChangedValue());
+////
+////
+////            System.out.println("----------------------------");
+////            System.out.println("Pseudo code:");
+////            for (int j=0; j< listPseudoStep.size(); j++){
+////                if (pseudoStepOrder.get(stepPointer) == j){
+////                    System.out.println(listPseudoStep.get(j).getContent() + "  <==");
+////                }else {
+////                    System.out.println(listPseudoStep.get(j).getContent());
+////                }
+////            }
+////
+////
+////            a = sc.nextInt();
+////            if (a == 1){
+////                System.out.println("next step");
+////                stepPointer++;
+////            }else if (a ==2 && stepPointer > 0){
+////                System.out.println("back one step");
+////                stepPointer--;
+////            }else if (a == 0){
+////                System.out.println("Break");
+////                break;
+////            }
+////        }
+////
+////        System.out.println("End run");
+////        for (int i = 0; i < listState.size(); i++){
+////            listState.get(stepPointer).getCurrentVertexes().get(i).getVerCircle().setFill(listState.get(stepPointer).getVertexPaints().get(i));
+////        }
+//    }
 
-    public float getMinDistance(int start, int end){
-        return minDis.get(start).get(end);
-    }
+//    public float getMinDistance(int start, int end){
+//        return minDis.get(start).get(end);
+//    }
 
     public ArrayList<State> getListState(){
         return listState;
