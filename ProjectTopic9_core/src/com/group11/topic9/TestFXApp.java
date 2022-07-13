@@ -63,6 +63,8 @@ public class TestFXApp extends Application {
 
     int h; //dung de test
 
+    int startVer = 0;
+
     double thetaRadian;
 
     double thetaDegree;
@@ -202,6 +204,26 @@ public class TestFXApp extends Application {
 
 
 //        design button
+        ComboBox chooseVer = new ComboBox<>();
+        chooseVer.setLayoutY(250);
+        chooseVer.setLayoutX(20);
+        chooseVer.getSelectionModel().selectedItemProperty().addListener((options, oldVal, newVal)->{
+                    //textStatus.setText(dp.getMinDis(newVal));
+//                    message.setText("");
+//                    for (int i = 0; i < g.getListVertex().size(); i++)
+//                        message.setText(message.getText() + dp.getPath((Integer) newVal, i) + " : " +dp.getMinDis((int)newVal, i) + "\n");
+
+            startVer = (Integer) newVal;
+            System.out.println(startVer);
+
+            boxCenter.getChildren().clear();
+            boxCenter.getChildren().addAll(defaultState);
+
+            boxRight.getChildren().clear();
+        });
+        boxLeft.getChildren().add(chooseVer);
+
+
         Button button1 = new Button("Create");
         button1.setLayoutX(20);
         button1.setOnMouseClicked(eventButton1 -> {
@@ -212,6 +234,7 @@ public class TestFXApp extends Application {
             boxCenter.addEventFilter(MouseEvent.MOUSE_CLICKED, mouseEventCreateVertex);
 
             boxRight.getChildren().clear();
+            chooseVer.getItems().clear();
 
             graphVertex = new ArrayList<>();
             graphEdge = new ArrayList<>();
@@ -250,6 +273,10 @@ public class TestFXApp extends Application {
 
                 g = new Graph(graphEdge, graphVertex);
                 g.showGraph();
+
+                chooseVer.getItems().clear();
+                for (int i = 0; i < g.getListVertex().size(); i++)
+                    chooseVer.getItems().add(i);
             } else
                 textStatus.setText("chua co graph");
         });
@@ -318,17 +345,20 @@ public class TestFXApp extends Application {
                 speed.setShowTickLabels(true);
                 speed.setShowTickMarks(true);
 
-                ComboBox chooseVer = new ComboBox<>();
-                chooseVer.setLayoutY(15);
-                chooseVer.setLayoutX(500);
-                for (int i = 0; i < g.getListVertex().size(); i++)
-                    chooseVer.getItems().add(i);
+//                ComboBox chooseVer = new ComboBox<>();
+//                chooseVer.setLayoutY(15);
+//                chooseVer.setLayoutX(500);
+//                for (int i = 0; i < g.getListVertex().size(); i++)
+//                    chooseVer.getItems().add(i);
 
 //                chooseVer.getSelectionModel().selectFirst();
 //                chooseVer.getItems().addAll(1,2,3,4);
 
+                Button showPath = new Button("show path");
+                showPath.setLayoutY(15);
+                showPath.setLayoutX(500);
 
-                controlBox.getChildren().addAll(next, back, run, pause, speed, chooseVer);
+                controlBox.getChildren().addAll(next, back, run, pause, speed, showPath);
                 newWindowRoot.setBottom(controlBox);
 
                 matrix.setHgap(3);
@@ -354,16 +384,22 @@ public class TestFXApp extends Application {
                 matrix.add(verSign2, 0,g.getListVertex().size() + 2);
 
                 DynamicProgramming dp = new DynamicProgramming();
-                dp.executeAlgorithm(g);         //chay thuat toan
+                dp.executeAlgorithm(g, 0);         //chay thuat toan
 //                System.out.println(dp.getMinDis(0,3));
 
-                chooseVer.getSelectionModel().selectedItemProperty().addListener((options, oldVal, newVal)->{
-                    //textStatus.setText(dp.getMinDis(newVal));
+//                chooseVer.getSelectionModel().selectedItemProperty().addListener((options, oldVal, newVal)->{
+//                    //textStatus.setText(dp.getMinDis(newVal));
+//                    message.setText("");
+//                    for (int i = 0; i < g.getListVertex().size(); i++)
+//                        message.setText(message.getText() + dp.getPath((Integer) newVal, i) + " : " +dp.getMinDis((int)newVal, i) + "\n");
+//                });
+
+
+                showPath.setOnMouseClicked(event -> {
                     message.setText("");
                     for (int i = 0; i < g.getListVertex().size(); i++)
-                        message.setText(message.getText() + dp.getPath((Integer) newVal, i) + " : " +dp.getMinDis((int)newVal, i) + "\n");
+                        message.setText(message.getText() + dp.getPath( startVer, i) + " : " +dp.getMinDis(startVer, i) + "\n");
                 });
-
 
                 for (int i = 1; i < g.getListVertex().size() + 1; i++){
                     for (int j = 1; j < g.getListVertex().size() + 1; j++){
@@ -545,7 +581,7 @@ public class TestFXApp extends Application {
                 newWindowRoot.setBottom(controlBox);
 
                 Dijkstra dj = new Dijkstra();
-                dj.executeAlgorithm(g);
+                dj.executeAlgorithm(g, startVer);
 
                 stepPointer = 1;
                 a = -1;
@@ -719,14 +755,14 @@ public class TestFXApp extends Application {
                 textStatus.setText("Chua tao xong graph");
 
         });
-
         boxLeft.getChildren().add(button4);
+
+
 
         Button button5 = new Button("Run BF");
         button5.setLayoutY(200);
         button5.setLayoutX(20);
-        //event button5
-        button5.setOnMouseClicked(eventButton4 -> {
+        button5.setOnMouseClicked(eventButton5 -> {
             if (stateFinish) {
                 abc  = new ArrayList<>();
                 def = new ArrayList<>();
@@ -782,11 +818,21 @@ public class TestFXApp extends Application {
                 speed.setShowTickLabels(true);
                 speed.setShowTickMarks(true);
 
-                controlBox.getChildren().addAll(next, back, run, pause, speed);
+                Button showPath = new Button("show path");
+                showPath.setLayoutY(15);
+                showPath.setLayoutX(500);
+
+                controlBox.getChildren().addAll(next, back, run, pause, speed, showPath);
                 newWindowRoot.setBottom(controlBox);
 
                 BellmanFord bmf = new BellmanFord();
-                bmf.executeAlgorithm(g);
+                bmf.executeAlgorithm(g, startVer);
+
+                showPath.setOnMouseClicked(event -> {
+                    message.setText("");
+                    for (int i = 0; i < g.getListVertex().size(); i++)
+                        message.setText(message.getText() + "" + bmf.printPath(g, g.hasVertex(i), g.hasVertex(startVer)) + "\n");
+                });
 
                 stepPointer = 0;
 
@@ -1096,6 +1142,10 @@ public class TestFXApp extends Application {
 
             g = new Graph(graphEdge, graphVertex);
             g.showGraph();
+
+            chooseVer.getItems().clear();
+            for (int i = 0; i < g.getListVertex().size(); i++)
+                chooseVer.getItems().add(i);
 
             boxCenter.getChildren().addAll(l0,l1,l2,l3,l4,l5,circle0,circle1,circle2,circle3,circle4, t0,t1,t2,t3,t4);
             defaultState.clear();

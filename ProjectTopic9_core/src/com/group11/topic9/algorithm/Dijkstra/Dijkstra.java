@@ -15,7 +15,7 @@ import java.util.ArrayList;
 public class Dijkstra extends Algorithm {
     public static final float INFINITE = 1000;
 
-    public void dijkstraProgram(Graph g){
+    public void dijkstraProgram(Graph g, int startID){
         int count;
         //co canh di toi : ORANGE
         //dang xet      : LIGHTGREEN
@@ -35,7 +35,7 @@ public class Dijkstra extends Algorithm {
         float sumD0D1=0;
         float weid0d1=0;
 
-        int startID= 0;
+        //int startID= 0;
         Vertex Start ;
         Start = g.getVerFromID(startID);
 
@@ -400,7 +400,7 @@ public class Dijkstra extends Algorithm {
 
 
     @Override
-    public void executeAlgorithm (Graph g){
+    public void executeAlgorithm (Graph g, int startID){
         listState = new ArrayList<>();
         listPseudoStep = new ArrayList<>();
         pseudoStepOrder = new ArrayList<>();
@@ -413,7 +413,7 @@ public class Dijkstra extends Algorithm {
         listPseudoStep.add(new PseudoStep(" "));                //4 step Nope
         listDetailedStep = new ArrayList<>();
 
-        dijkstraProgram(g);
+        dijkstraProgram(g, startID);
     }
 
 

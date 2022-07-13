@@ -12,7 +12,7 @@ import java.util.ArrayList;
 
 public class BellmanFord extends Algorithm {
     public static final int INFINITE = 1000;
-    public void bellmanfordProgram(Graph g) {
+    public void bellmanfordProgram(Graph g, int startID) {
 
         //co canh di toi : ORANGE
         //dang xet      : LIGHTGREEN
@@ -23,7 +23,7 @@ public class BellmanFord extends Algorithm {
         ArrayList<Paint> edgePaint ;
 
         Vertex temp = new Vertex();
-        int startID = 0;
+        //int startID = 0;
         Vertex Start = new Vertex();
         Start = g.getVerFromID(startID);
 
@@ -163,20 +163,21 @@ public class BellmanFord extends Algorithm {
             listDetailedStep.add(new DetailedStep("#edge_processed = " + edge_processed + ", V*E = " +
                     g.getListVertex().size() + "*" + g.getListEdge().size() + " = " + g.getListVertex().size() + g.getListEdge().size() + ".\n" +
                     "This is the SSSP spanning tree from source vertex "+Start.getId()+"\n"));
-            this.printPath(g, g.getListVertex().get(i), Start);
-            System.out.println("->" + g.getListVertex().get(i).getId());
+//            this.printPath(g, g.getListVertex().get(i), Start);
+//            System.out.println("->" + g.getListVertex().get(i).getId());
         }
 
     }
-    public void printPath(Graph g, Vertex v, Vertex start){
+    public String printPath(Graph g, Vertex v, Vertex start){
         if (v != start){
-            printPath(g, g.getVerFromID(v.getPre()), start);
-            System.out.print("->"+ v.getPre());
+            return printPath(g, g.getVerFromID(v.getPre()), start) + "->" + v.getPre();
+            //System.out.print("->"+ v.getPre());
         }
+        return  "";
     }
 
     @Override
-    public void executeAlgorithm(Graph g) {
+    public void executeAlgorithm(Graph g, int startID) {
         listState = new ArrayList<>();
         listPseudoStep = new ArrayList<>();
         pseudoStepOrder = new ArrayList<>();
@@ -189,7 +190,7 @@ public class BellmanFord extends Algorithm {
                 +"           if can still relax that edge, -∞ cycle found")); //3
 
         listDetailedStep = new ArrayList<>();
-        bellmanfordProgram(g);
+        bellmanfordProgram(g, startID);
 
     }
 
