@@ -11,7 +11,7 @@ import javafx.scene.paint.Paint;
 import java.util.ArrayList;
 
 public class BellmanFord extends Algorithm {
-    public static final int INFINITE = 1000;
+    public static final int INFINITE = 9999;
     public void bellmanfordProgram(Graph g, int startID) {
 
         //co canh di toi : ORANGE
@@ -168,12 +168,16 @@ public class BellmanFord extends Algorithm {
         }
 
     }
+
+
+
     public String printPath(Graph g, Vertex v, Vertex start){
         if (v != start){
-            return printPath(g, g.getVerFromID(v.getPre()), start) + "->" + v.getPre();
-            //System.out.print("->"+ v.getPre());
+
+            return "->" + start.getId() + " -> " + v.getId() + " " + "distance: " + v.getDis();
+
         }
-        return  "";
+        return  "->" + v.getPre();
     }
 
     @Override

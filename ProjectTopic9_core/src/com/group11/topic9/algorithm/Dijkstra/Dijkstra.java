@@ -391,14 +391,13 @@ public class Dijkstra extends Algorithm {
     }
 
 
-    public void printPath(Graph g, Vertex v, Vertex start){
-        if (v != start){
-            printPath(g, g.getVerFromID(v.getPre()), start);
-            System.out.print("->"+ v.getPre());
+    public String printPath(Graph g, Vertex tmp, Vertex start){
+        if (tmp != start){
+            printPath(g, g.getVerFromID(tmp.getPre()), start);
+            return "->" + tmp.getPre();
         }
+        return "->" + tmp.getPre();
     }
-
-
     @Override
     public void executeAlgorithm (Graph g, int startID){
         listState = new ArrayList<>();
