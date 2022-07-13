@@ -13,9 +13,31 @@ public class Edge {
     private boolean isWeighed;
     private boolean isDirected;
     private float weight;
-
     private Line edgeLine;
 
+
+    public Line getEdgeLine() {
+        return edgeLine;
+    }
+
+    public void setEdgeLine(Line edgeLine) {
+        this.edgeLine = edgeLine;
+    }
+
+    public  Edge(){
+        super();
+    }
+
+    //Constructor
+    public Edge(Vertex from, Vertex to, ArrayList<Vertex> myVertex, boolean isWeighed, boolean isDirected, float weight) {
+
+        this.from = from;
+        this.to = to;
+        this.myVertex = myVertex;
+        this.isWeighed = isWeighed;
+        this.isDirected = isDirected;
+        this.weight = weight;
+    }
 
     public Edge(Vertex from, Vertex to, ArrayList<Vertex> myVertex, Line line,boolean isWeighed, boolean isDirected, float weight) {
         this.from = from;
@@ -43,17 +65,8 @@ public class Edge {
         return isWeighed;
     }
 
-//    public boolean isDirected() {
-//        return isDirected;
-//    }
-
-
-    public Line getEdgeLine() {
-        return edgeLine;
-    }
-
-    public void setEdgeLine(Line edgeLine) {
-        this.edgeLine = edgeLine;
+    public boolean isDirected() {
+        return isDirected;
     }
 
     public float getWeight() {
@@ -113,4 +126,6 @@ public class Edge {
 
         return j == y;
     }
+
+
 }

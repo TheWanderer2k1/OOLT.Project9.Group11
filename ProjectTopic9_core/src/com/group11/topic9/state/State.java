@@ -7,6 +7,7 @@ import javafx.scene.paint.Paint;
 import java.util.ArrayList;
 
 public class State {
+
 //    Graph observedGraph;
 
     private ArrayList<Vertex> currentVertexes; //nhung dinh dc xet
@@ -14,6 +15,7 @@ public class State {
 
     private ArrayList<Paint> vertexPaints;
     private ArrayList<Paint> edgePaints;
+
 
 
     public ArrayList<Vertex> getCurrentVertexes() {
@@ -56,4 +58,13 @@ public class State {
         this.currentVertexes = currentVertexes;
         this.vertexPaints = vertexPaints;
     }
+
+
+    public State(ArrayList<Vertex> currentVertexes, ArrayList<Edge> currentEdges, ArrayList<Paint> vertexPaints, ArrayList<Paint> edgePaints) {
+        this.currentVertexes = currentVertexes;
+        this.currentEdges = currentEdges;
+        this.vertexPaints = vertexPaints;
+        this.edgePaints = edgePaints;
+    }
 }
+

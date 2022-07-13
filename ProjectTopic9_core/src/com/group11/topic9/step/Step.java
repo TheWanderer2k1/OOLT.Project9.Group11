@@ -1,10 +1,6 @@
 package com.group11.topic9.step;
 
-
-import java.util.ArrayList;
-
 public abstract class  Step {
-
     private String content;
 
     public String getContent() {
@@ -18,4 +14,6 @@ public abstract class  Step {
     public Step(String content) {
         this.content = content;
     }
+
+
 }
