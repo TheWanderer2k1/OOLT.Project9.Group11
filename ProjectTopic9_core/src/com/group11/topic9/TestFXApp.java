@@ -259,7 +259,226 @@ public class TestFXApp extends Application {
         Button button3 = new Button("Run DP");
         button3.setLayoutX(20);
         button3.setLayoutY(100);
-        //dat su kien o day
+        button3.setOnMouseClicked(eventButton3 -> {
+            if (stateFinish) {
+                stepPointer = 0;
+
+
+                textStatus.setText("Running DP");
+                boxCenter.getChildren().clear();
+                boxCenter.getChildren().addAll(defaultState);
+
+                boxRight.getChildren().clear();
+
+                BorderPane newWindowRoot = new BorderPane();
+
+                GridPane matrix = new GridPane();
+                newWindowRoot.setCenter(matrix);
+
+                Pane messageStep = new Pane();
+                //messageStep.setStyle("-fx-background-color:orange;");
+                messageStep.setPrefSize(400, 250);
+                newWindowRoot.setRight(messageStep);
+
+                Text message = new Text("Pseudo and Detail step here");
+                message.setWrappingWidth(300);
+                //message.setLayoutY(10);
+                message.setLayoutX(17);
+                messageStep.getChildren().add(message);
+
+                Pane controlBox = new Pane();
+                controlBox.setStyle("-fx-background-color:azure;");
+                controlBox.setPrefSize(600, 50);
+
+
+                Button next = new Button("Next");
+                next.setLayoutX(50);
+                next.setLayoutY(15);
+
+                Button back = new Button("Back");
+                back.setLayoutX(100);
+                back.setLayoutY(15);
+
+                Button run = new Button("Run");
+                run.setLayoutX(150);
+                run.setLayoutY(15);
+
+                Button pause = new Button("Pause");
+                pause.setLayoutX(200);
+                pause.setLayoutY(15);
+
+                Slider speed = new Slider();
+                speed.setLayoutX(300);
+                speed.setLayoutY(15);
+                speed.setMin(0.1);
+                speed.setMax(2.0);
+                speed.setValue(0.5);
+                speed.setBlockIncrement(0.5);
+                speed.setShowTickLabels(true);
+                speed.setShowTickMarks(true);
+
+                ComboBox chooseVer = new ComboBox<>();
+                chooseVer.setLayoutY(15);
+                chooseVer.setLayoutX(500);
+                for (int i = 0; i < g.getListVertex().size(); i++)
+                    chooseVer.getItems().add(i);
+
+//                chooseVer.getSelectionModel().selectFirst();
+//                chooseVer.getItems().addAll(1,2,3,4);
+
+
+                controlBox.getChildren().addAll(next, back, run, pause, speed, chooseVer);
+                newWindowRoot.setBottom(controlBox);
+
+                matrix.setHgap(3);
+                matrix.setVgap(3);
+                matrix.setGridLinesVisible(true);
+
+                for (int i = 1; i < g.getListVertex().size() + 1; i++){
+                    Text text1 = new Text(String.valueOf(i - 1));
+                    text1.setFill(Color.GREEN);
+
+                    Text text2 = new Text(String.valueOf(i - 1));
+                    text2.setFill(Color.GREEN);
+
+                    matrix.add(text1, 0, i);
+                    matrix.add(text2, i, 0);
+                }
+
+                Text verSign = new Text("Vertex");
+                matrix.add(verSign, 0, 0);
+                Text verSign1 = new Text("Vertex");
+                matrix.add(verSign1, g.getListVertex().size() + 2, 0);
+                Text verSign2 = new Text("Vertex");
+                matrix.add(verSign2, 0,g.getListVertex().size() + 2);
+
+                DynamicProgramming dp = new DynamicProgramming();
+                dp.executeAlgorithm(g);         //chay thuat toan
+//                System.out.println(dp.getMinDis(0,3));
+
+                chooseVer.getSelectionModel().selectedItemProperty().addListener((options, oldVal, newVal)->{
+                    //textStatus.setText(dp.getMinDis(newVal));
+                    message.setText("");
+                    for (int i = 0; i < g.getListVertex().size(); i++)
+                        message.setText(message.getText() + dp.getPath((Integer) newVal, i) + " : " +dp.getMinDis((int)newVal, i) + "\n");
+                });
+
+
+                for (int i = 1; i < g.getListVertex().size() + 1; i++){
+                    for (int j = 1; j < g.getListVertex().size() + 1; j++){
+                        Text text = new Text(String.valueOf(dp.getInitMatrix().get(i - 1).get(j - 1)));
+                        text.textProperty().addListener((observableValue, oldStr, newStr) -> text.setFill(Color.RED));
+                        matrix.add(text, i, j);
+                    }
+                }
+
+
+
+                //tao event o day
+                PauseTransition showAlgorithm = new PauseTransition(Duration.seconds(0.1));
+
+                showAlgorithm.setOnFinished(event -> {
+                    if (dp.getListState().get(stepPointer).getCurrentVertexes() != null ) {
+
+                        for (int i = 0; i < boxCenter.getChildren().size(); i++){
+                            if (boxCenter.getChildren().get(i).toString().contains("Circle"))
+                                ((Circle) boxCenter.getChildren().get(i)).setFill(Color.WHITE);
+                        }
+
+                        for (int i = 0; i < dp.getListState().get(stepPointer).getCurrentVertexes().size(); i++)
+                            dp.getListState().get(stepPointer).getCurrentVertexes().get(i).getVerCircle().setFill(dp.getListState().get(stepPointer).getVertexPaints().get(i));
+
+                    }
+                    else if (((DPState) dp.getListState().get(stepPointer)).getVerFrom() != 999) {
+                        //System.out.println("change: " + ((DPState) dp.getListState().get(stepPointer)).getChangedValue());
+                        for (Node node : matrix.getChildren()){
+                            if (GridPane.getColumnIndex(node) != null && GridPane.getRowIndex(node) != null)
+                                if (GridPane.getColumnIndex(node) == ((DPState) dp.getListState().get(stepPointer)).getVerFrom() + 1 &&
+                                        GridPane.getRowIndex(node) == ((DPState) dp.getListState().get(stepPointer)).getVerTo() + 1){
+                                    ((Text) node).setText(String.valueOf(((DPState) dp.getListState().get(stepPointer)).getChangedValue()));
+                                    System.out.println(((DPState) dp.getListState().get(stepPointer)).getVerFrom() + "-" + ((DPState) dp.getListState().get(stepPointer)).getVerTo());
+                                    break;
+                                }
+                        }
+                    }
+                    message.setText(dp.getPseudoAndDetailStep(stepPointer));
+
+                    if (stepPointer < dp.getListState().size() - 1)
+                        stepPointer++;
+                    showAlgorithm.playFromStart();
+                });
+
+
+                next.setOnMouseClicked(eventNext -> {
+                    if (stepPointer < dp.getListState().size() - 1)
+                        stepPointer++;
+
+                    if (dp.getListState().get(stepPointer).getCurrentVertexes() != null ) {
+
+                        for (int i = 0; i < boxCenter.getChildren().size(); i++){
+                            if (boxCenter.getChildren().get(i).toString().contains("Circle"))
+                                ((Circle) boxCenter.getChildren().get(i)).setFill(Color.WHITE);
+                        }
+
+                        for (int i = 0; i < dp.getListState().get(stepPointer).getCurrentVertexes().size(); i++)
+                            dp.getListState().get(stepPointer).getCurrentVertexes().get(i).getVerCircle().setFill(dp.getListState().get(stepPointer).getVertexPaints().get(i));
+
+                    }
+                    else if (((DPState) dp.getListState().get(stepPointer)).getVerFrom() != 999) {
+                        //System.out.println("change: " + ((DPState) dp.getListState().get(stepPointer)).getChangedValue());
+                        for (Node node : matrix.getChildren()){
+                            if (GridPane.getColumnIndex(node) != null && GridPane.getRowIndex(node) != null)
+                                if (GridPane.getColumnIndex(node) == ((DPState) dp.getListState().get(stepPointer)).getVerFrom() + 1 &&
+                                        GridPane.getRowIndex(node) == ((DPState) dp.getListState().get(stepPointer)).getVerTo() + 1){
+                                    ((Text) node).setText(String.valueOf(((DPState) dp.getListState().get(stepPointer)).getChangedValue()));
+                                    System.out.println(((DPState) dp.getListState().get(stepPointer)).getVerFrom() + "-" + ((DPState) dp.getListState().get(stepPointer)).getVerTo());
+                                    break;
+                                }
+                        }
+                    }
+                    message.setText(dp.getPseudoAndDetailStep(stepPointer));
+                    //dp.getPseudoAndDetailStep(stepPointer);
+
+                });
+
+                back.setOnMouseClicked(eventBack -> {
+                    if (stepPointer > 0)
+                        stepPointer--;
+
+                    if (dp.getListState().get(stepPointer).getCurrentVertexes() != null ) {
+                        for (int i = 0; i < boxCenter.getChildren().size(); i++){
+                            if (boxCenter.getChildren().get(i).toString().contains("Circle"))
+                                ((Circle) boxCenter.getChildren().get(i)).setFill(Color.WHITE);
+                        }
+
+                        for (int i = 0; i < dp.getListState().get(stepPointer).getCurrentVertexes().size(); i++)
+                            dp.getListState().get(stepPointer).getCurrentVertexes().get(i).getVerCircle().setFill(dp.getListState().get(stepPointer).getVertexPaints().get(i));
+
+                    }
+
+
+                    message.setText(dp.getPseudoAndDetailStep(stepPointer));
+                });
+
+                run.setOnMouseClicked(eventRun -> {
+                    showAlgorithm.play();
+                });
+
+                pause.setOnMouseClicked(eventPause -> {
+                    showAlgorithm.stop();
+                });
+
+                speed.valueProperty().addListener((observableValue, oldVal, newVal) -> {
+                    showAlgorithm.setDuration(Duration.seconds((Double)newVal));
+                });
+
+
+
+                boxRight.getChildren().add(newWindowRoot);
+            }else
+                textStatus.setText("Chua tao xong graph");
+
+        });
         boxLeft.getChildren().add(button3);
 
 
@@ -267,10 +486,241 @@ public class TestFXApp extends Application {
         Button button4 = new Button("Run DJ");
         button4.setLayoutX(20);
         button4.setLayoutY(150);
-        //event button4
+        button4.setOnMouseClicked(eventButton3 -> {
+            if (stateFinish) {
+
+                textStatus.setText("Running DJ");
+                boxCenter.getChildren().clear();
+                boxCenter.getChildren().addAll(defaultState);
+
+                boxRight.getChildren().clear();
+
+                abc = new ArrayList<>();
+                def = new ArrayList<>();
+
+                BorderPane newWindowRoot = new BorderPane();
+
+                Pane messageStep = new Pane();
+                messageStep.setPrefSize(400, 250);
+                newWindowRoot.setCenter(messageStep);
+
+                Text message = new Text("Pseudo and Detail step here");
+                message.setWrappingWidth(380);
+                message.setLayoutY(15);
+                message.setLayoutX(20);
+                messageStep.getChildren().add(message);
+
+                Pane controlBox = new Pane();
+                controlBox.setStyle("-fx-background-color:azure;");
+                controlBox.setPrefSize(600, 50);
+
+                Button next = new Button("Next");
+                next.setLayoutX(50);
+                next.setLayoutY(15);
+
+                Button back = new Button("Back");
+                back.setLayoutX(100);
+                back.setLayoutY(15);
+
+                Button run = new Button("run");
+                run.setLayoutX(150);
+                run.setLayoutY(15);
+
+                Button pause = new Button("pause");
+                pause.setLayoutX(200);
+                pause.setLayoutY(15);
+
+                Slider speed = new Slider();
+                speed.setLayoutX(300);
+                speed.setLayoutY(15);
+                speed.setMin(0.1);
+                speed.setMax(2.0);
+                speed.setValue(0.5);
+                speed.setBlockIncrement(0.5);
+                speed.setShowTickLabels(true);
+                speed.setShowTickMarks(true);
+
+                controlBox.getChildren().addAll(next, back, run, pause, speed);
+                newWindowRoot.setBottom(controlBox);
+
+                Dijkstra dj = new Dijkstra();
+                dj.executeAlgorithm(g);
+
+                stepPointer = 1;
+                a = -1;
+//                for (int i=0; i<dj.getListState().size(); i++){
+//                    System.out.println("size "+i+" : "+dj.getListState().get(i).getCurrentVertexes().size());
+//                }
+
+                h = 0;
+
+                next.setOnMouseClicked(eventNext -> {
+
+                    //khi o cuoi cua list
+                    if ( h == abc.size()) {
+                        abc.add(new ArrayList<>());
+                        def.add(new ArrayList<>());
+
+                        //TODO: luu mau do thi hien tai
+                        for (int i = 0; i < boxCenter.getChildren().size(); i++) {
+                            if (boxCenter.getChildren().get(i).toString().contains("Circle"))
+                                abc.get(h).add(((Circle) boxCenter.getChildren().get(i)).getFill());
+                            if (boxCenter.getChildren().get(i).toString().contains("Line"))
+                                def.get(h).add(((Line) boxCenter.getChildren().get(i)).getStroke());
+                        }
+                    }
+
+
+                    if (stepPointer < dj.getListState().size() - 1
+                            && a == dj.getListState().get(stepPointer).getCurrentVertexes().size()-1) {
+                        stepPointer++;
+                        System.out.println("New state step : "+stepPointer);
+                        a = -1;
+                    }
+                    if (a < dj.getListState().get(stepPointer).getCurrentVertexes().size()-1){
+                        a++;
+                        h++;
+                    }
+
+                    if (dj.getListState().get(stepPointer).getCurrentVertexes() != null
+                            &&dj.getListState().get(stepPointer).getCurrentEdges() != null ) {
+                        for (int j=a; j>=0; j--){
+                            if (dj.getListState().get(stepPointer).getCurrentVertexes().get(j).getVerCircle().getFill() != Color.ORANGE){
+                                dj.getListState().get(stepPointer).getCurrentVertexes().get(j).getVerCircle().setFill(dj.getListState().get(stepPointer).getVertexPaints().get(j));
+                            }
+                            if (dj.getListState().get(stepPointer).getCurrentEdges().get(j).getWeight() != 0){
+                                dj.getListState().get(stepPointer).getCurrentEdges().get(j).getEdgeLine().setStroke(dj.getListState().get(stepPointer).getEdgePaints().get(j));
+                            }
+
+                            if (a == dj.getListState().get(stepPointer).getCurrentVertexes().size()-1
+                                    && j==0){
+                                break;
+                            }
+                        }
+
+                        System.out.println("\nh = "+h);
+                        System.out.println("a = "+a);
+                        System.out.println("st= "+stepPointer);
+                    }
+                    System.out.println();
+                    message.setText(dj.getPseudoAndDetailStep(h));
+//                    dj.getPseudoAndDetailStep(stepPointer);
+                });
+
+
+                back.setOnMouseClicked(eventBack -> {
+                    if (h > 0 ) {
+                        h--;
+
+                        int tmpV = 0;
+                        int tmpE = 0;
+                        for (int i = 0; i < boxCenter.getChildren().size(); i++) {
+                            if (boxCenter.getChildren().get(i).toString().contains("Circle")) {
+                                ((Circle) boxCenter.getChildren().get(i)).setFill(abc.get(h).get(tmpV));
+                                tmpV++;
+                            }
+
+                            if (boxCenter.getChildren().get(i).toString().contains("Line")) {
+                                ((Line) boxCenter.getChildren().get(i)).setStroke(def.get(h).get(tmpE));
+                                tmpE++;
+                            }
+                        }
+
+                        if (a == 0 && stepPointer > 0) {
+                            stepPointer--;
+                            System.out.println("new Step " + stepPointer);
+                            a = dj.getListState().get(stepPointer).getCurrentVertexes().size() - 1;
+                        } else if (a > 0) {
+                            a--;
+                            System.out.println("Step " + stepPointer);
+                        }
+                        System.out.println("\nh = " + h);
+                        System.out.println("a = " + a);
+                        System.out.println("st= " + stepPointer);
+                        System.out.println("soSt=" + dj.getListState().size());
+                    }
+                    message.setText(dj.getPseudoAndDetailStep(h));
+//                    dj.getPseudoAndDetailStep(h);
+                });
+
+                PauseTransition showAlgorithm = new PauseTransition(Duration.seconds(0.1));
+
+                showAlgorithm.setOnFinished(actionEvent -> {
+
+                    if (h == abc.size()) {
+                        abc.add(new ArrayList<>());
+                        def.add(new ArrayList<>());
+
+                        //TODO: luu mau do thi hien tai
+                        for (int i = 0; i < boxCenter.getChildren().size(); i++) {
+                            if (boxCenter.getChildren().get(i).toString().contains("Circle"))
+                                abc.get(h).add(((Circle) boxCenter.getChildren().get(i)).getFill());
+                            if (boxCenter.getChildren().get(i).toString().contains("Line"))
+                                def.get(h).add(((Line) boxCenter.getChildren().get(i)).getStroke());
+                        }
+                    }
+
+                    if (stepPointer < dj.getListState().size() - 1
+                            && a == dj.getListState().get(stepPointer).getCurrentVertexes().size()-1) {
+                        stepPointer++;
+                        System.out.println("New state step : "+stepPointer);
+                        a = -1;
+                    }
+
+                    if (a < dj.getListState().get(stepPointer).getCurrentVertexes().size()-1){
+                        a++;
+                        h++;
+                    }
+
+                    if (dj.getListState().get(stepPointer).getCurrentVertexes() != null
+                            &&dj.getListState().get(stepPointer).getCurrentEdges() != null ) {
+
+
+
+                        for (int j=a; j>=0; j--){
+                            if (dj.getListState().get(stepPointer).getCurrentVertexes().get(j).getVerCircle().getFill() != Color.ORANGE){
+                                dj.getListState().get(stepPointer).getCurrentVertexes().get(j).getVerCircle().setFill(dj.getListState().get(stepPointer).getVertexPaints().get(j));
+                            }
+//                               dj.getListState().get(stepPointer).getCurrentVertexes().get(j).getVerCircle().setFill(dj.getListState().get(stepPointer).getVertexPaints().get(j));
+                            if (dj.getListState().get(stepPointer).getCurrentEdges().get(j).getWeight() != 0){
+                                dj.getListState().get(stepPointer).getCurrentEdges().get(j).getEdgeLine().setStroke(dj.getListState().get(stepPointer).getEdgePaints().get(j));
+                            }
+                            if (a == dj.getListState().get(stepPointer).getCurrentVertexes().size()-1
+                                    && j==0){
+                                break;
+                            }
+                        }
+
+                        System.out.println("\nh = "+h);
+                        System.out.println("a = "+a);
+                        System.out.println("st= "+stepPointer);
+                    }
+                    message.setText(dj.getPseudoAndDetailStep(h));
+                    showAlgorithm.playFromStart();
+
+                });
+
+
+                run.setOnMouseClicked(mouseEvent -> {
+                    showAlgorithm.play();
+                });
+
+                pause.setOnMouseClicked(mouseEvent -> {
+                    showAlgorithm.stop();
+                });
+
+                speed.valueProperty().addListener((observableValue, oldVal, newVal) -> {
+                    showAlgorithm.setDuration(Duration.seconds((Double) newVal));
+                });
+                boxRight.getChildren().add(newWindowRoot);
+
+            }else
+                textStatus.setText("Chua tao xong graph");
+
+        });
 
         boxLeft.getChildren().add(button4);
-        
+
         Button button5 = new Button("Run BF");
         button5.setLayoutY(200);
         button5.setLayoutX(20);
