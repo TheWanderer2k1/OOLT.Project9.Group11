@@ -1,7 +1,8 @@
-package com.group11.topic9.algorithm;
+package com.group11.topic9.algorithm.Dijkstra;
 
-import com.group11.topic9.action.DetailedStep;
-import com.group11.topic9.action.PseudoStep;
+import com.group11.topic9.step.DetailedStep;
+import com.group11.topic9.step.PseudoStep;
+import com.group11.topic9.algorithm.Algorithm;
 import com.group11.topic9.graph.Edge;
 import com.group11.topic9.graph.Graph;
 import com.group11.topic9.graph.Vertex;
@@ -9,11 +10,9 @@ import com.group11.topic9.state.State;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.Paint;
 
-import java.awt.*;
 import java.util.ArrayList;
-import java.util.Scanner;
 
-public class Dijkstra extends  Algorithm{
+public class Dijkstra extends Algorithm {
     public static final float INFINITE = 1000;
 
     public void dijkstraProgram(Graph g){
@@ -49,50 +48,86 @@ public class Dijkstra extends  Algorithm{
         }
         checkVertex.addAll(g.getListVertex());
 
-        //init all of Vertex
-        Start.setDis(0.0f);
-        Start.setPre(0);
-//        listState.add(new State());
+//        //TODO:init all of Vertex
+//        Start.setDis(0.0f);
+//        Start.setPre(0);
+
         currentVertex = new ArrayList<>();        //TODO: STATE SOURCE VERTEX
         vertexPaint = new ArrayList<>();
         currentEdge = new ArrayList<>();
         edgePaint = new ArrayList<>();
-
         currentVertex.add(g.getListVertex().get(0));
         vertexPaint.add(Color.ORANGE);
         listState.add(new State(currentVertex, currentEdge, vertexPaint, edgePaint));
-//
         pseudoStepOrder.add(4);
         listDetailedStep.add(new DetailedStep(" "));
 
-        pseudoStepOrder.add(0);                 //TODO: initSSSP & pre-populate PQ
-        listDetailedStep.add(new DetailedStep("Vertex "+startID + " is the source vertex\n"
-                +"Set p[v]=0; d[v] = INF, but d["+startID+"]=0 " +
-                "\nPQ={  ("));
-//                        +checkVertex.get(1).getId()+", "+checkVertex.get(1).getPre()+"-"+checkVertex.get(1).getDis()+") , ("+
-//                        checkVertex.get(2).getId()+", "+checkVertex.get(2).getPre()+"-"+checkVertex.get(2).getDis()+") , ("+
-//                        checkVertex.get(3).getId()+", "+checkVertex.get(3).getPre()+"-"+checkVertex.get(3).getDis()+")...}"));
-                                                                    //todo: can them truong hop do thi co 1 dinh
 
-        System.out.println("Check vertex");
-        for (int i=0; i<checkVertex.size(); i++){
-            checkVertex.get(i).showVerInfor();
+        pseudoStepOrder.add(0);                 //TODO: initSSSP & pre-populate PQ
+        if (checkVertex.size() == 1){           //khi do thi chi co 1 Vertex
+            listDetailedStep.add(new DetailedStep("Vertex "+startID+" is the source vertex\n"
+            +"Set p[v]=0; d[v]=INF, but d["+startID+"]"
+            +"PQ= { "+checkVertex.get(0).getId()+", "+checkVertex.get(0).getPre()+"-"+checkVertex.get(0).getDis()+")"));
+        }else {
+            listDetailedStep.add(new DetailedStep("Vertex " + startID + " is the source vertex\n"
+                    + "Set p[v]=0; d[v] = INF, but d[" + startID + "]=0 " +
+                    "\nPQ={  ("+
+                        checkVertex.get(0).getId()+", "+checkVertex.get(0).getPre()+"-"+checkVertex.get(0).getDis()+") , ("+
+                        checkVertex.get(1).getId()+", "+checkVertex.get(1).getPre()+"-"+checkVertex.get(1).getDis()+")    }"));
+            //todo: can them truong hop do thi co 1 dinh
         }
-        System.out.println("-----------");
+
+
 
 
         if (g.numOutdegree(Start) == 0){
-            System.out.println("Khong co dinh ke cua "+Start.getId());
+            System.out.println("Khong co dinh ke cua "+startID);
+            temp = this.extractMin(checkVertex);
+            currentVertex = new ArrayList<>();
+            vertexPaint = new ArrayList<>();
+            currentEdge = new ArrayList<>();
+            edgePaint = new ArrayList<>();
+
+            currentVertex.add(g.getListVertex().get(startID));
+            currentEdge.add(new Edge());
+            vertexPaint.add(Color.LIGHTGREEN);
+            edgePaint.add(Color.BLACK);
+            pseudoStepOrder.add(0);                 //TODO: initSSSP & pre-populate PQ
+            listDetailedStep.add(new DetailedStep("Vertex "+startID+" is the source vertex\n"
+                    +"Set p[v]=0; d[v]=INF, but d["+startID+"]"
+                    +"PQ= { "+checkVertex.get(0).getId()+", "+checkVertex.get(0).getPre()+"-"+checkVertex.get(0).getDis()+")"));
+
+
+            currentVertex.add(g.getListVertex().get(startID));
+            currentEdge.add(new Edge());
+            vertexPaint.add(Color.LIGHTGREEN);
+            edgePaint.add(Color.BLACK);
+            pseudoStepOrder.add(1);                                         //TODO: while !PQ.empty() //PQ is a Priority Queue
+            listDetailedStep.add(new DetailedStep("The current PQ={ ("
+//                                Math.ceil(temp.getDis()*100.0)/100.0
+                    +checkVertex.get(0).getId()+","+checkVertex.get(0).getPre()+"-"+Math.ceil(checkVertex.get(0).getDis()*100.0)/100.0+") \n"
+                    + "Exploring neighbor of u = "+temp.getId()+", d["+temp.getId()+"]="+ Math.ceil(temp.getDis()*100.0)/100.0));
+
+
+            currentVertex.add(g.getListVertex().get(startID));
+            currentEdge.add(new Edge());
+            vertexPaint.add(Color.ORANGE);
+            edgePaint.add(Color.BLACK);
+            pseudoStepOrder.add(2);     //TODO:for each neighbor v of u = PQ.front(), PQ.pop() , relax and remove
+            listDetailedStep.add(new DetailedStep("d["+checkVertex.get(startID).getId()+"]= " +checkVertex.get(startID).getDis()+" is visted and removed"));
+
+            listState.add(new State(currentVertex, currentEdge, vertexPaint, edgePaint));
+
+
         }else {
             while (checkVertex.size() != 0) {
                 boolean check = true;
                 count = 0;
-                for (int t=0;t<checkVertex.size(); t++){
+                for (int t=0;t<checkVertex.size(); t++){            //khoi tao vo cung
                     if (checkVertex.get(t).getDis() == INFINITE){
                         count++;
                     }
                 }
-
 
                 for (int i = 0; i < g.getListVertex().size(); i++) {                  //todo : find extractMin
                     temp = this.extractMin(checkVertex);
@@ -100,15 +135,19 @@ public class Dijkstra extends  Algorithm{
                     vertexPaint = new ArrayList<>();
                     currentEdge = new ArrayList<>();
                     edgePaint = new ArrayList<>();
+
+                    if (temp.getId() == startID){
+                        currentVertex.add(temp);
+                        currentEdge.add(new Edge());
+                        vertexPaint.add(Color.LIGHTGREEN);
+                        edgePaint.add(Color.BLACK);
+                    }
                     for (int l=0; l < g.getListVertex().size(); l++){
                         if (g.getListVertex().get(l).getId() == temp.getId()){        // todo: to mau LIGHTGREEN cho extractMin
-
                             currentVertex.add(g.getListVertex().get(l));
                             currentEdge.add(new Edge());
-
                             vertexPaint.add(Color.LIGHTGREEN);
                             edgePaint.add(Color.BLACK);
-
                         }
                     }
                     pseudoStepOrder.add(1);                                         //TODO: while !PQ.empty() //PQ is a Priority Queue
@@ -118,32 +157,45 @@ public class Dijkstra extends  Algorithm{
                                 +checkVertex.get(0).getId()+","+checkVertex.get(0).getPre()+"-"+Math.ceil(checkVertex.get(0).getDis()*100.0)/100.0+") , ("
                                 +checkVertex.get(1).getId()+","+checkVertex.get(1).getPre()+"-"+Math.ceil(checkVertex.get(1).getDis()*100.0)/100.0+")...} \n"
                                 + "Exploring neighbor of u = "+temp.getId()+", d["+temp.getId()+"]="+ Math.ceil(temp.getDis()*100.0)/100.0));
+                    }else {
+                        listDetailedStep.add(new DetailedStep("The current PQ={ ("
+//                                Math.ceil(temp.getDis()*100.0)/100.0
+                                +checkVertex.get(0).getId()+","+checkVertex.get(0).getPre()+"-"+Math.ceil(checkVertex.get(0).getDis()*100.0)/100.0+") \n"
+                                + "Exploring neighbor of u = "+temp.getId()+", d["+temp.getId()+"]="+ Math.ceil(temp.getDis()*100.0)/100.0));
                     }
 
 
 
                     int edgeProcess = 0;
                     for (int j = 0; j < g.getListVertex().size(); j++) {
-
+                        //TODO: check neighborhood
                         if (g.hasEdgeFrom(temp, g.getListVertex().get(j)) &&  g.getListVertex().get(j) != temp) {
 //                            edgeProcess++;
 
                             //vd : extractMin la A (id:0) ---> B (id:1)  => j=B(id)=1
                             if (existInArr(g.getListVertex().get(j), checkVertex)){             //neu B tontai trong checkVertex (B chua bi loai)
 
-                                currentVertex.add(g.getListVertex().get(j));
-                                currentEdge.add(g.getEdgeByVer(temp, g.getListVertex().get(j)));
-                                vertexPaint.add(Color.ORANGE);
-                                edgePaint.add(Color.ORANGE);
 
-
-                                d0 = temp.getDis();
+                                d0 = temp.getDis();                                                 //d0 hien tai
                                 weid0d1 = g.getWeight(temp, g.getListVertex().get(j));
-                                d1bd = g.getListVertex().get(j).getDis();
-                                sumD0D1 = d0+g.getWeight(temp, g.getListVertex().get(j));
+                                d1bd = g.getListVertex().get(j).getDis();                           //d1 hien tai
+                                sumD0D1 = d0+g.getWeight(temp, g.getListVertex().get(j));           //d[0] +w(0, 1)
 
+                                if (sumD0D1 > d1bd){
+                                    currentVertex.add(g.getListVertex().get(j));
+                                    currentEdge.add(g.getEdgeByVer(temp, g.getListVertex().get(j)));
+                                    vertexPaint.add(Color.LIGHTBLUE);
+                                    edgePaint.add(Color.LIGHTGREY);
+                                }else {
+
+                                    currentVertex.add(g.getListVertex().get(j));
+                                    currentEdge.add(g.getEdgeByVer(temp, g.getListVertex().get(j)));
+                                    vertexPaint.add(Color.LIGHTBLUE);
+                                    edgePaint.add(Color.ORANGE);
+                                }
                                 Relaxing(g, temp, g.getListVertex().get(j));
                                 d1=g.getListVertex().get(j).getDis();
+
 
 
                                 pseudoStepOrder.add(2);              //for each neighbor v of u = PQ.front(), PQ.pop() , relax and remove
@@ -187,7 +239,7 @@ public class Dijkstra extends  Algorithm{
                                 currentVertex.add(g.getListVertex().get(j));
                                 currentEdge.add(g.getEdgeByVer(temp, g.getListVertex().get(j)));
                                 vertexPaint.add(Color.ORANGE);
-                                edgePaint.add(Color.LIGHTBLUE);
+                                edgePaint.add(Color.LIGHTGREY);
                                 //todo: noi den dinh ma da duoc xoa khoi checkVertex
                                 d0 = temp.getDis();
                                 weid0d1 = g.getWeight(temp, g.getListVertex().get(j));
@@ -251,7 +303,7 @@ public class Dijkstra extends  Algorithm{
 
                                 currentVertex.add(checkVertex.get(j));
                                 currentEdge.add(new Edge());
-                                vertexPaint.add(Color.SKYBLUE);
+                                vertexPaint.add(Color.ORANGE);
                                 edgePaint.add(Color.BLACK);
 
                                 checkVertex.remove(j);
@@ -261,9 +313,7 @@ public class Dijkstra extends  Algorithm{
 
                     listState.add(new State(currentVertex, currentEdge, vertexPaint, edgePaint));
 
-
                 }
-
 
 
 
@@ -277,14 +327,7 @@ public class Dijkstra extends  Algorithm{
                     break;
                 }
 
-
-
             }
-
-
-
-
-
 
 
 
@@ -300,7 +343,7 @@ public class Dijkstra extends  Algorithm{
                 System.out.print("(" + g.getListVertex().get(i).getId() + ","
                         + g.getListVertex().get(i).getDis() + "): ");
                 if (g.getListVertex().get(i).getDis() == INFINITE) {
-                    System.out.println("Khong co duong di tu " + Start.getId() + " den "
+                    System.out.println("Khong co duong di tu " + startID + " den "
                             + g.getListVertex().get(i).getId());
                 } else {
                     this.printPath(g, g.getListVertex().get(i), Start);
@@ -308,15 +351,11 @@ public class Dijkstra extends  Algorithm{
                 }
             }
 
-
-
         }
     }
 
     public void Relaxing (Graph g, Vertex ver1, Vertex ver2){               //a:ver1----> b:ver2
-
         if ((ver1.getDis() +g.getWeight(ver1, ver2)) < ver2.getDis()){    //d[a]+ab < d[b]
-
             float newDis = ver1.getDis()+ g.getWeight(ver1, ver2);
             ver2.setDis(newDis);                                       //d[b] ::= d[a]+ab
             ver2.setPre(ver1.getId());
@@ -326,7 +365,6 @@ public class Dijkstra extends  Algorithm{
 
 
     public boolean existInArr( Vertex ver1, ArrayList<Vertex> checkVertex){
-//        boolean check = false;
         for (int i=0; i< checkVertex.size(); i++){
             if (checkVertex.get(i) == ver1){
                 return true;
@@ -341,14 +379,13 @@ public class Dijkstra extends  Algorithm{
         float minDis =  INFINITE;
 
         for (int i=0; i < checkVertex.size(); i++) {
-
             if (checkVertex.get(i).getDis() < minDis) {
                 minDis = checkVertex.get(i).getDis();
                 temp = checkVertex.get(i);
             }
         }
         if (minDis == INFINITE){
-            return null;
+            return checkVertex.get(0);
         }else{
             return temp;
         }
@@ -377,15 +414,11 @@ public class Dijkstra extends  Algorithm{
         listPseudoStep.add(new PseudoStep(" "));                //4 step Nope
         listDetailedStep = new ArrayList<>();
 
-//        listState.add(new State());
         dijkstraProgram(g);
     }
 
 
-    @Override
-    public void run() {
 
-    }
 
 
     public ArrayList<State> getListState(){

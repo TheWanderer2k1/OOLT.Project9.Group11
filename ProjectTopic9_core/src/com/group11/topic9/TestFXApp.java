@@ -1,35 +1,24 @@
 package com.group11.topic9;
 
-import com.group11.topic9.algorithm.Dijkstra;
+import com.group11.topic9.algorithm.Dijkstra.Dijkstra;
 import com.group11.topic9.graph.Edge;
 import com.group11.topic9.graph.Graph;
 import com.group11.topic9.graph.Vertex;
 import javafx.animation.PauseTransition;
 import javafx.application.Application;
-import javafx.beans.InvalidationListener;
-import javafx.beans.property.ObjectProperty;
-import javafx.beans.value.ChangeListener;
-import javafx.beans.value.ObservableValue;
 import javafx.event.EventHandler;
-import javafx.scene.Group;
 import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Slider;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.BorderPane;
-import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Pane;
-import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.Paint;
 import javafx.scene.shape.Circle;
 import javafx.scene.shape.Line;
-import javafx.scene.shape.Polygon;
-import javafx.scene.text.Font;
-import javafx.scene.text.FontWeight;
 import javafx.scene.text.Text;
-import javafx.scene.text.TextAlignment;
 import javafx.stage.Stage;
 import javafx.util.Duration;
 
@@ -67,6 +56,9 @@ public class TestFXApp extends Application {
 
     int h; //dung de test
 
+    double thetaRadian;
+
+    double thetaDegree;
 
     public static void main(String[] args) {
         launch(args);
@@ -143,7 +135,6 @@ public class TestFXApp extends Application {
                                     ver1 = graphVertex.get(i);
                                 }
                             }
-
                             state++;
                         } else if (state == 2) {
                             state = 1;
@@ -173,10 +164,31 @@ public class TestFXApp extends Application {
                                 double Y2 = ver2.getVerCircle().getCenterY();
                                 double X = Math.abs(X1-X2);
                                 double Y = Math.abs(Y1-Y2);
+
                                 double length=0;
                                 length = Math.sqrt(Math.pow(X, 2) + Math.pow(Y, 2));
-//                                if()
+
+
+//                                Arrow arr = new Arrow(X1, Y1, X2, Y2);
+
+                                double angle = Math.atan2((Y2 - Y1), (X2 - X1)) - Math.PI / 2.0;
+                                double sin = Math.sin(angle);
+                                double cos = Math.cos(angle);
+                                //point1
+                                double x1 = (- 1.0 / 2.0 * cos + Math.sqrt(3) / 2 * sin) * 10.0 + X2;
+                                double y1 = (- 1.0 / 2.0 * sin - Math.sqrt(3) / 2 * cos) * 10.0 + Y2;
+                                //point2
+                                double x2 = (1.0 / 2.0 * cos + Math.sqrt(3) / 2 * sin) * 10.0 + X2;
+                                double y2 = (1.0 / 2.0 * sin - Math.sqrt(3) / 2 * cos) * 10.0 + Y2;
+
+//                                boxCenter.getChildren().add(arr);
+
 //arrow
+                                System.out.println("Y = "+Y+"X = "+X);
+                                thetaRadian = Math.atan2(Y, X);
+                                thetaRadian = Math.toDegrees(Math.atan2(Y, X));
+                                System.out.println("Goc lech Ra = "+thetaRadian);
+                                System.out.println("Goc lech Ge ="+thetaDegree);
                                 e = new Edge(ver1, ver2, groupVer, line, true, true, (float) length);
                                 for (int i = 0; i < graphEdge.size(); i++){
                                     if (e.equals(graphEdge.get(i))) {
@@ -376,7 +388,7 @@ public class TestFXApp extends Application {
                     if (dj.getListState().get(stepPointer).getCurrentVertexes() != null
                             &&dj.getListState().get(stepPointer).getCurrentEdges() != null ) {
                         for (int j=a; j>=0; j--){
-                            if (dj.getListState().get(stepPointer).getCurrentVertexes().get(j).getVerCircle().getFill() != Color.SKYBLUE){
+                            if (dj.getListState().get(stepPointer).getCurrentVertexes().get(j).getVerCircle().getFill() != Color.ORANGE){
                                 dj.getListState().get(stepPointer).getCurrentVertexes().get(j).getVerCircle().setFill(dj.getListState().get(stepPointer).getVertexPaints().get(j));
                             }
                             if (dj.getListState().get(stepPointer).getCurrentEdges().get(j).getWeight() != 0){
@@ -394,8 +406,8 @@ public class TestFXApp extends Application {
                         System.out.println("st= "+stepPointer);
                     }
                     System.out.println();
-                    message.setText(dj.getPseudoAndDetailStep(stepPointer));
-                    dj.getPseudoAndDetailStep(stepPointer);
+                    message.setText(dj.getPseudoAndDetailStep(h));
+//                    dj.getPseudoAndDetailStep(stepPointer);
                 });
 
 
@@ -430,7 +442,7 @@ public class TestFXApp extends Application {
                         System.out.println("st= " + stepPointer);
                         System.out.println("soSt=" + dj.getListState().size());
                     }
-//                    message.setText(dj.getPseudoAndDetailStep(h));
+                    message.setText(dj.getPseudoAndDetailStep(h));
 //                    dj.getPseudoAndDetailStep(h);
                 });
 
@@ -469,7 +481,7 @@ public class TestFXApp extends Application {
 
 
                         for (int j=a; j>=0; j--){
-                            if (dj.getListState().get(stepPointer).getCurrentVertexes().get(j).getVerCircle().getFill() != Color.SKYBLUE){
+                            if (dj.getListState().get(stepPointer).getCurrentVertexes().get(j).getVerCircle().getFill() != Color.ORANGE){
                                 dj.getListState().get(stepPointer).getCurrentVertexes().get(j).getVerCircle().setFill(dj.getListState().get(stepPointer).getVertexPaints().get(j));
                             }
 //                               dj.getListState().get(stepPointer).getCurrentVertexes().get(j).getVerCircle().setFill(dj.getListState().get(stepPointer).getVertexPaints().get(j));
@@ -486,8 +498,9 @@ public class TestFXApp extends Application {
                         System.out.println("a = "+a);
                         System.out.println("st= "+stepPointer);
                     }
-
+                    message.setText(dj.getPseudoAndDetailStep(h));
                     showAlgorithm.playFromStart();
+
                 });
 
 

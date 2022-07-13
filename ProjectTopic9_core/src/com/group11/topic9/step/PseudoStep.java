@@ -1,7 +1,6 @@
-package com.group11.topic9.action;
+package com.group11.topic9.step;
 
 import java.util.ArrayList;
-import java.util.Scanner;
 
 public class PseudoStep extends Step{
 

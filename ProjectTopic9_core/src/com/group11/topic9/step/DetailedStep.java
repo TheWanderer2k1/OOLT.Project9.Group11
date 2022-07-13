@@ -1,4 +1,4 @@
-package com.group11.topic9.action;
+package com.group11.topic9.step;
 
 public class DetailedStep extends Step{
 
