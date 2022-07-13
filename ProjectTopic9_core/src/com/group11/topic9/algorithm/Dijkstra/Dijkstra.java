@@ -79,7 +79,6 @@ public class Dijkstra extends Algorithm {
 
 
 
-
         if (g.numOutdegree(Start) == 0){
             System.out.println("Khong co dinh ke cua "+startID);
             temp = this.extractMin(checkVertex);

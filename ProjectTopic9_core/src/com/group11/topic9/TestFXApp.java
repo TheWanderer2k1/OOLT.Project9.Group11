@@ -4,6 +4,7 @@ package com.group11.topic9;
 import com.group11.topic9.algorithm.DynamicProgramming.DynamicProgramming;
 import com.group11.topic9.state.DPState;
 import com.group11.topic9.algorithm.Dijkstra.Dijkstra;
+import com.group11.topic9.algorithm.Bellmanford.BellmanFord;
 import com.group11.topic9.graph.Edge;
 import com.group11.topic9.graph.Graph;
 import com.group11.topic9.graph.Vertex;
@@ -52,7 +53,7 @@ public class TestFXApp extends Application {
     ArrayList<Node> defaultState = new ArrayList<>();
 
 
-    boolean check;
+    boolean check, checkEdge;
 
     int stepPointer;
 
@@ -725,6 +726,228 @@ public class TestFXApp extends Application {
         button5.setLayoutY(200);
         button5.setLayoutX(20);
         //event button5
+        button5.setOnMouseClicked(eventButton4 -> {
+            if (stateFinish) {
+                abc  = new ArrayList<>();
+                def = new ArrayList<>();
+                h = 0;
+
+                checkEdge = true;
+
+                textStatus.setText("Running BF");
+                boxCenter.getChildren().clear();
+                boxCenter.getChildren().addAll(defaultState);
+
+                boxRight.getChildren().clear();
+
+                BorderPane newWindowRoot = new BorderPane();
+
+                Pane messageStep = new Pane();
+                messageStep.setPrefSize(400, 250);
+                newWindowRoot.setCenter(messageStep);
+
+                Text message = new Text("Pseudo and Detail step here");
+                message.setWrappingWidth(380);
+                message.setLayoutY(15);
+                message.setLayoutX(20);
+                messageStep.getChildren().add(message);
+
+                Pane controlBox = new Pane();
+                controlBox.setStyle("-fx-background-color:azure;");
+                controlBox.setPrefSize(600, 50);
+
+                Button next = new Button("Next");
+                next.setLayoutX(50);
+                next.setLayoutY(15);
+
+                Button back = new Button("Back");
+                back.setLayoutX(100);
+                back.setLayoutY(15);
+
+                Button run = new Button("Run");
+                run.setLayoutX(150);
+                run.setLayoutY(15);
+
+                Button pause = new Button("Pause");
+                pause.setLayoutX(200);
+                pause.setLayoutY(15);
+
+                Slider speed = new Slider();
+                speed.setLayoutX(300);
+                speed.setLayoutY(15);
+                speed.setMin(0.1);
+                speed.setMax(2.0);
+                speed.setValue(0.5);
+                speed.setBlockIncrement(0.5);
+                speed.setShowTickLabels(true);
+                speed.setShowTickMarks(true);
+
+                controlBox.getChildren().addAll(next, back, run, pause, speed);
+                newWindowRoot.setBottom(controlBox);
+
+                BellmanFord bmf = new BellmanFord();
+                bmf.executeAlgorithm(g);
+
+                stepPointer = 0;
+
+                next.setOnMouseClicked(eventNext -> {
+
+                    checkEdge = true;
+
+                    if ( h == abc.size()) {
+                        abc.add(new ArrayList<>());
+                        def.add(new ArrayList<>());
+
+                        //TODO: luu mau do thi hien tai
+                        for (int i = 0; i < boxCenter.getChildren().size(); i++) {
+                            if (boxCenter.getChildren().get(i).toString().contains("Circle"))
+                                abc.get(h).add(((Circle) boxCenter.getChildren().get(i)).getFill());
+                            if (boxCenter.getChildren().get(i).toString().contains("Line"))
+                                def.get(h).add(((Line) boxCenter.getChildren().get(i)).getStroke());
+                        }
+                    }
+
+                    for (int g = 0; g < boxCenter.getChildren().size(); g++){
+                        if (boxCenter.getChildren().get(g).toString().contains("Line"))
+                            if (((Line) boxCenter.getChildren().get(g)).getStroke() != Color.ORANGE){
+                                checkEdge = false;
+                                break;
+                            }
+                    }
+
+                    if (checkEdge){
+                        for (int i = 0; i < boxCenter.getChildren().size(); i++){
+                            if (boxCenter.getChildren().get(i).toString().contains("Circle"))
+                                ((Circle) boxCenter.getChildren().get(i)).setFill(Color.LIGHTGREY);
+                            if (boxCenter.getChildren().get(i).toString().contains("Line"))
+                                ((Line) boxCenter.getChildren().get(i)).setStroke(Color.GRAY);
+                        }
+                    }
+
+
+                    if (stepPointer < bmf.getListState().size()-1 ) {
+                        stepPointer++;
+                        h++;
+                    }
+                    System.out.println("STEP POINTER = "+ stepPointer);
+                    //VERTEXS
+                    if (bmf.getListState().get(stepPointer).getCurrentVertexes() != null
+                            &&bmf.getListState().get(stepPointer).getCurrentEdges() != null ) {
+
+                        for (int i = 0; i < bmf.getListState().get(stepPointer).getCurrentVertexes().size(); i++) {
+                            bmf.getListState().get(stepPointer).getCurrentVertexes().get(i).getVerCircle().setFill(bmf.getListState().get(stepPointer).getVertexPaints().get(i));
+                        }
+                        for (int i = 0; i < bmf.getListState().get(stepPointer).getCurrentEdges().size(); i++) {
+                            bmf.getListState().get(stepPointer).getCurrentEdges().get(i).getEdgeLine().setStroke(bmf.getListState().get(stepPointer).getEdgePaints().get(i));
+                        }
+                    }
+
+                    message.setText(bmf.getPseudoAndDetailStep(stepPointer));
+                });
+
+
+                back.setOnMouseClicked(eventBack -> {
+                    if (h > 0 ) {
+                        h--;
+
+                        int tmpV = 0;
+                        int tmpE = 0;
+                        for (int i = 0; i < boxCenter.getChildren().size(); i++) {
+                            if (boxCenter.getChildren().get(i).toString().contains("Circle")) {
+                                ((Circle) boxCenter.getChildren().get(i)).setFill(abc.get(h).get(tmpV));
+                                tmpV++;
+                            }
+
+                            if (boxCenter.getChildren().get(i).toString().contains("Line")) {
+                                ((Line) boxCenter.getChildren().get(i)).setStroke(def.get(h).get(tmpE));
+                                tmpE++;
+                            }
+                        }
+                    }
+
+                    if (stepPointer > 0)
+                        stepPointer--;
+
+                    message.setText(bmf.getPseudoAndDetailStep(stepPointer));
+
+                });
+
+                PauseTransition showAlgorithm = new PauseTransition(Duration.seconds(0.1));
+
+                showAlgorithm.setOnFinished(actionEvent -> {
+                    checkEdge = true;
+
+                    if ( h == abc.size()) {
+                        abc.add(new ArrayList<>());
+                        def.add(new ArrayList<>());
+
+                        //TODO: luu mau do thi hien tai
+                        for (int i = 0; i < boxCenter.getChildren().size(); i++) {
+                            if (boxCenter.getChildren().get(i).toString().contains("Circle"))
+                                abc.get(h).add(((Circle) boxCenter.getChildren().get(i)).getFill());
+                            if (boxCenter.getChildren().get(i).toString().contains("Line"))
+                                def.get(h).add(((Line) boxCenter.getChildren().get(i)).getStroke());
+                        }
+                    }
+
+                    for (int g = 0; g < boxCenter.getChildren().size(); g++){
+                        if (boxCenter.getChildren().get(g).toString().contains("Line"))
+                            if (((Line) boxCenter.getChildren().get(g)).getStroke() != Color.ORANGE){
+                                checkEdge = false;
+                                break;
+                            }
+                    }
+
+                    if (checkEdge){
+                        for (int i = 0; i < boxCenter.getChildren().size(); i++){
+                            if (boxCenter.getChildren().get(i).toString().contains("Circle"))
+                                ((Circle) boxCenter.getChildren().get(i)).setFill(Color.LIGHTGREY);
+                            if (boxCenter.getChildren().get(i).toString().contains("Line"))
+                                ((Line) boxCenter.getChildren().get(i)).setStroke(Color.GRAY);
+                        }
+                    }
+
+
+                    if (stepPointer < bmf.getListState().size()-1 ) {
+                        stepPointer++;
+                        h++;
+                    }
+                    //System.out.println("STEP POINTER = "+ stepPointer);
+                    //VERTEXS
+                    if (bmf.getListState().get(stepPointer).getCurrentVertexes() != null
+                            &&bmf.getListState().get(stepPointer).getCurrentEdges() != null ) {
+
+                        for (int i = 0; i < bmf.getListState().get(stepPointer).getCurrentVertexes().size(); i++) {
+                            bmf.getListState().get(stepPointer).getCurrentVertexes().get(i).getVerCircle().setFill(bmf.getListState().get(stepPointer).getVertexPaints().get(i));
+                        }
+                        for (int i = 0; i < bmf.getListState().get(stepPointer).getCurrentEdges().size(); i++) {
+                            bmf.getListState().get(stepPointer).getCurrentEdges().get(i).getEdgeLine().setStroke(bmf.getListState().get(stepPointer).getEdgePaints().get(i));
+                        }
+                    }
+
+                    message.setText(bmf.getPseudoAndDetailStep(stepPointer));
+
+                    showAlgorithm.playFromStart();
+                });
+
+                run.setOnMouseClicked(mouseEvent -> {
+                    showAlgorithm.play();
+                });
+
+                pause.setOnMouseClicked(mouseEvent -> {
+                    showAlgorithm.stop();
+                });
+
+                speed.valueProperty().addListener((observableValue, number, t1) -> {
+                    showAlgorithm.setDuration(Duration.seconds((Double) t1));
+                });
+
+                boxRight.getChildren().add(newWindowRoot);
+
+            }else
+                textStatus.setText("Chua tao xong graph");
+
+        });
         boxLeft.getChildren().add(button5);
 
 
