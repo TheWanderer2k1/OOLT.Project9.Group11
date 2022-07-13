@@ -17,13 +17,21 @@ public class Vertex {
         return verCircle;
     }
 
+    public int getPre() {
+        return pre;
+    }
+
+    public void setPre(int pre) {
+        this.pre = pre;
+    }
+
     public int getId() {
         return id;
     }
 
-//    public void setId(int id) {
-//        this.id = id;
-//    }
+    public void setId(int id) {
+        this.id = id;
+    }
 
     public Vertex(int id) {
         this.id = id;
@@ -34,13 +42,7 @@ public class Vertex {
         this.verCircle = verCircle;
     }
 
-    public int getPre() {
-        return pre;
-    }
 
-    public void setPre(int pre) {
-        this.pre = pre;
-    }
 
     public boolean equals(Vertex v){
         return this.id == v.getId();

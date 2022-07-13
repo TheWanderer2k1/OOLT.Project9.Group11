@@ -1,4 +1,4 @@
-package com.group11.topic9.algorithm;
+package com.group11.topic9.state;
 
 import com.group11.topic9.graph.Edge;
 import com.group11.topic9.graph.Vertex;

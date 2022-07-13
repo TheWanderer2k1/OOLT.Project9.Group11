@@ -1,6 +1,6 @@
-package com.group11.topic9.algorithm.DynamicProgramming;
+package com.group11.topic9.state;
 
-import com.group11.topic9.algorithm.State;
+import com.group11.topic9.state.State;
 import com.group11.topic9.graph.Vertex;
 import javafx.scene.paint.Paint;
 

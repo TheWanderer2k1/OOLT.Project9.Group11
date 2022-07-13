@@ -8,11 +8,6 @@ public class Graph {
 
     private boolean isDirected = true;
 
-    public Graph(ArrayList<Edge> listEdge, ArrayList<Vertex> listVertex) {
-        this.listEdge = listEdge;
-        this.listVertex = listVertex;
-    }
-
     public ArrayList<Edge> getListEdge() {
         return listEdge;
     }
@@ -26,6 +21,11 @@ public class Graph {
     }
 
     public void setListVertex(ArrayList<Vertex> listVertex) {
+        this.listVertex = listVertex;
+    }
+
+    public Graph(ArrayList<Edge> listEdge, ArrayList<Vertex> listVertex) {
+        this.listEdge = listEdge;
         this.listVertex = listVertex;
     }
 

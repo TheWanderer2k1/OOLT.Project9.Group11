@@ -1,4 +1,4 @@
-package com.group11.topic9.algorithm;
+package com.group11.topic9.step;
 
 public class DetailedStep extends Step{
 //    protected ArrayList<String> detailedCmd = new ArrayList<>();

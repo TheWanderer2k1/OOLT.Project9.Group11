@@ -1,7 +1,7 @@
 package com.group11.topic9;
 
 import com.group11.topic9.algorithm.DynamicProgramming.DynamicProgramming;
-import com.group11.topic9.algorithm.DynamicProgramming.DPState;
+import com.group11.topic9.state.DPState;
 import com.group11.topic9.graph.Edge;
 import com.group11.topic9.graph.Graph;
 import com.group11.topic9.graph.Vertex;

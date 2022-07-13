@@ -2,6 +2,10 @@ package com.group11.topic9.algorithm.DynamicProgramming;
 
 import com.group11.topic9.algorithm.*;
 import com.group11.topic9.graph.*;
+import com.group11.topic9.state.DPState;
+import com.group11.topic9.state.State;
+import com.group11.topic9.step.DetailedStep;
+import com.group11.topic9.step.PseudoStep;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.Paint;
 
