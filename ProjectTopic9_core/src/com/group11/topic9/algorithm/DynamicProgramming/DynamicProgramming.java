@@ -9,15 +9,12 @@ import java.util.ArrayList;
 
 public class DynamicProgramming extends Algorithm {
 
-    ArrayList<ArrayList<Float>> minDis = new ArrayList<>();
-    ArrayList<ArrayList<Float>> initMatrix = new ArrayList<>();
+    private ArrayList<ArrayList<Float>> minDis = new ArrayList<>();
+    private ArrayList<ArrayList<Float>> initMatrix = new ArrayList<>();
+    private ArrayList<ArrayList<Integer>> traceMatrix = new ArrayList<>();
 
     public ArrayList<ArrayList<Float>> getInitMatrix() {
         return initMatrix;
-    }
-
-    public ArrayList<ArrayList<Float>> getMinDis() {
-        return minDis;
     }
 
     public void initDP(Graph g){
@@ -25,6 +22,7 @@ public class DynamicProgramming extends Algorithm {
         for (int i  = 0; i < n; i++){
             minDis.add(new ArrayList());
             initMatrix.add(new ArrayList());
+            traceMatrix.add(new ArrayList<>());
         }
 
 
@@ -37,6 +35,8 @@ public class DynamicProgramming extends Algorithm {
                     minDis.get(i).add(999f);
                     initMatrix.get(i).add(999f);
                 }
+
+                traceMatrix.get(i).add(i);
             }
 
 
@@ -68,7 +68,7 @@ public class DynamicProgramming extends Algorithm {
         //set all minDis[i][j] to its i-j edge weight, other to infinite
     }
 
-    public void dynamicProgrammingSP(Graph g){      //co van de voi state list
+    public void dynamicProgrammingSP(Graph g){
         ArrayList<Vertex> currentVertex;
         ArrayList<Paint> vertexPaint;
         int numberVer = g.getListVertex().size();
@@ -87,7 +87,6 @@ public class DynamicProgramming extends Algorithm {
             currentVertex.add(g.getListVertex().get(k));
             vertexPaint.add(Color.WHITE);
             vertexPaint.add(Color.WHITE);
-
             vertexPaint.add(Color.PINK);
             listState.add(new DPState(currentVertex, vertexPaint, 999, 999, 999f));     //state[1]
 
@@ -143,6 +142,8 @@ public class DynamicProgramming extends Algorithm {
                                 pseudoStepOrder.add(7);
                                 listDetailedStep.add(new DetailedStep("update minDis[" + i + "][" + j + "] = tmp inside the 2-dimension array"));
 
+                                traceMatrix.get(i).set(j, traceMatrix.get(k).get(j));       //get duong di
+
                                 //tao state: thay doi minDis[i][j]
                                 listState.add(new DPState());
                                 listState.add(new DPState(i, j, tmp));
@@ -189,58 +190,6 @@ public class DynamicProgramming extends Algorithm {
         dynamicProgrammingSP(graph);
     }
 
-//    @Override
-//    public void run() {
-////        stepPointer = 0;
-////        Scanner sc = new Scanner(System.in);
-////        int a;
-////
-////        while (true){
-////            System.out.println("----------------------------");
-////            System.out.println("Detail: ");
-////            System.out.println(listDetailedStep.get(stepPointer).getContent());
-////
-////            if (listState.get(stepPointer).getCurrentVertexes() != null ) {
-////                System.out.println(listState.get(stepPointer).getCurrentVertexes().get(0).getId());
-////            }
-////            else if (((DPState) listState.get(stepPointer)).getI() != 999)
-////                    System.out.println( "change: " + ((DPState) listState.get(stepPointer)).getChangedValue());
-////
-////
-////            System.out.println("----------------------------");
-////            System.out.println("Pseudo code:");
-////            for (int j=0; j< listPseudoStep.size(); j++){
-////                if (pseudoStepOrder.get(stepPointer) == j){
-////                    System.out.println(listPseudoStep.get(j).getContent() + "  <==");
-////                }else {
-////                    System.out.println(listPseudoStep.get(j).getContent());
-////                }
-////            }
-////
-////
-////            a = sc.nextInt();
-////            if (a == 1){
-////                System.out.println("next step");
-////                stepPointer++;
-////            }else if (a ==2 && stepPointer > 0){
-////                System.out.println("back one step");
-////                stepPointer--;
-////            }else if (a == 0){
-////                System.out.println("Break");
-////                break;
-////            }
-////        }
-////
-////        System.out.println("End run");
-////        for (int i = 0; i < listState.size(); i++){
-////            listState.get(stepPointer).getCurrentVertexes().get(i).getVerCircle().setFill(listState.get(stepPointer).getVertexPaints().get(i));
-////        }
-//    }
-
-//    public float getMinDistance(int start, int end){
-//        return minDis.get(start).get(end);
-//    }
-
     public ArrayList<State> getListState(){
         return listState;
     }
@@ -261,5 +210,16 @@ public class DynamicProgramming extends Algorithm {
                 }
             }
         return str;
+    }
+
+    public String getPath(int start, int end){
+        if (start != end)
+            return end + " <- " + getPath(start, traceMatrix.get(start).get(end));
+
+        return start + " ";
+    }
+
+    public float getMinDis(int start, int end){
+        return minDis.get(start).get(end);
     }
 }

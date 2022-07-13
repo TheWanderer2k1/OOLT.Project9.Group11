@@ -3,7 +3,6 @@ package com.group11.topic9.graph;
 import javafx.scene.shape.Line;
 
 import java.util.ArrayList;
-import java.util.Scanner;
 
 public class Edge {
     private Vertex from;
@@ -15,7 +14,7 @@ public class Edge {
     private boolean isDirected;
     private float weight;
 
-    Line edgeLine;
+    private Line edgeLine;
 
 
     public Edge(Vertex from, Vertex to, ArrayList<Vertex> myVertex, Line line,boolean isWeighed, boolean isDirected, float weight) {

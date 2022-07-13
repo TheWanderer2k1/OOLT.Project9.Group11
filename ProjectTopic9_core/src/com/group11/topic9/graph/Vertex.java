@@ -5,7 +5,9 @@ import javafx.scene.shape.Circle;
 public class Vertex {
     private int id;
 
-    Circle verCircle; // xam
+    private int pre = -1;
+
+    private Circle verCircle;
 
     public void setVerCircle(Circle verCircle) {
         this.verCircle = verCircle;
@@ -32,6 +34,13 @@ public class Vertex {
         this.verCircle = verCircle;
     }
 
+    public int getPre() {
+        return pre;
+    }
+
+    public void setPre(int pre) {
+        this.pre = pre;
+    }
 
     public boolean equals(Vertex v){
         return this.id == v.getId();

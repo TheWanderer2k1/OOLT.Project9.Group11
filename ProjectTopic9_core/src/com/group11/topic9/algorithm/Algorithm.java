@@ -9,7 +9,6 @@ public abstract class Algorithm {
     protected ArrayList<State> listState;
     protected ArrayList<PseudoStep>listPseudoStep;
     protected ArrayList<Integer>pseudoStepOrder;
-
     protected ArrayList<DetailedStep>listDetailedStep;
 
     //protected int stepPointer;

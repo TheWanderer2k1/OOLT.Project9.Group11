@@ -1,13 +1,12 @@
+package com.group11.topic9;
+
 import com.group11.topic9.algorithm.DynamicProgramming.DynamicProgramming;
-import com.group11.topic9.algorithm.DPState;
+import com.group11.topic9.algorithm.DynamicProgramming.DPState;
 import com.group11.topic9.graph.Edge;
 import com.group11.topic9.graph.Graph;
 import com.group11.topic9.graph.Vertex;
 import javafx.animation.PauseTransition;
 import javafx.application.Application;
-import javafx.beans.InvalidationListener;
-import javafx.collections.ListChangeListener;
-import javafx.collections.ObservableList;
 import javafx.event.EventHandler;
 import javafx.scene.Node;
 import javafx.scene.Scene;
@@ -307,8 +306,17 @@ public class TestFXApp extends Application {
                 speed.setShowTickLabels(true);
                 speed.setShowTickMarks(true);
 
+                ComboBox chooseVer = new ComboBox<>();
+                chooseVer.setLayoutY(15);
+                chooseVer.setLayoutX(500);
+                for (int i = 0; i < g.getListVertex().size(); i++)
+                    chooseVer.getItems().add(i);
 
-                controlBox.getChildren().addAll(next, back, run, pause, speed);
+//                chooseVer.getSelectionModel().selectFirst();
+//                chooseVer.getItems().addAll(1,2,3,4);
+
+
+                controlBox.getChildren().addAll(next, back, run, pause, speed, chooseVer);
                 newWindowRoot.setBottom(controlBox);
 
                 matrix.setHgap(3);
@@ -335,6 +343,14 @@ public class TestFXApp extends Application {
 
                 DynamicProgramming dp = new DynamicProgramming();
                 dp.executeAlgorithm(g);         //chay thuat toan
+//                System.out.println(dp.getMinDis(0,3));
+
+                chooseVer.getSelectionModel().selectedItemProperty().addListener((options, oldVal, newVal)->{
+                    //textStatus.setText(dp.getMinDis(newVal));
+                    message.setText("");
+                    for (int i = 0; i < g.getListVertex().size(); i++)
+                        message.setText(message.getText() + dp.getPath((Integer) newVal, i) + " : " +dp.getMinDis((int)newVal, i) + "\n");
+                });
 
 
                 for (int i = 1; i < g.getListVertex().size() + 1; i++){
@@ -362,14 +378,14 @@ public class TestFXApp extends Application {
                             dp.getListState().get(stepPointer).getCurrentVertexes().get(i).getVerCircle().setFill(dp.getListState().get(stepPointer).getVertexPaints().get(i));
 
                     }
-                    else if (((DPState) dp.getListState().get(stepPointer)).getI() != 999) {
+                    else if (((DPState) dp.getListState().get(stepPointer)).getVerFrom() != 999) {
                         //System.out.println("change: " + ((DPState) dp.getListState().get(stepPointer)).getChangedValue());
                         for (Node node : matrix.getChildren()){
                             if (GridPane.getColumnIndex(node) != null && GridPane.getRowIndex(node) != null)
-                                if (GridPane.getColumnIndex(node) == ((DPState) dp.getListState().get(stepPointer)).getI() + 1 &&
-                                        GridPane.getRowIndex(node) == ((DPState) dp.getListState().get(stepPointer)).getJ() + 1){
+                                if (GridPane.getColumnIndex(node) == ((DPState) dp.getListState().get(stepPointer)).getVerFrom() + 1 &&
+                                        GridPane.getRowIndex(node) == ((DPState) dp.getListState().get(stepPointer)).getVerTo() + 1){
                                     ((Text) node).setText(String.valueOf(((DPState) dp.getListState().get(stepPointer)).getChangedValue()));
-                                    System.out.println(((DPState) dp.getListState().get(stepPointer)).getI() + "-" + ((DPState) dp.getListState().get(stepPointer)).getJ());
+                                    System.out.println(((DPState) dp.getListState().get(stepPointer)).getVerFrom() + "-" + ((DPState) dp.getListState().get(stepPointer)).getVerTo());
                                     break;
                                 }
                         }
@@ -397,14 +413,14 @@ public class TestFXApp extends Application {
                                 dp.getListState().get(stepPointer).getCurrentVertexes().get(i).getVerCircle().setFill(dp.getListState().get(stepPointer).getVertexPaints().get(i));
 
                     }
-                    else if (((DPState) dp.getListState().get(stepPointer)).getI() != 999) {
+                    else if (((DPState) dp.getListState().get(stepPointer)).getVerFrom() != 999) {
                         //System.out.println("change: " + ((DPState) dp.getListState().get(stepPointer)).getChangedValue());
                         for (Node node : matrix.getChildren()){
                             if (GridPane.getColumnIndex(node) != null && GridPane.getRowIndex(node) != null)
-                                if (GridPane.getColumnIndex(node) == ((DPState) dp.getListState().get(stepPointer)).getI() + 1 &&
-                                GridPane.getRowIndex(node) == ((DPState) dp.getListState().get(stepPointer)).getJ() + 1){
+                                if (GridPane.getColumnIndex(node) == ((DPState) dp.getListState().get(stepPointer)).getVerFrom() + 1 &&
+                                GridPane.getRowIndex(node) == ((DPState) dp.getListState().get(stepPointer)).getVerTo() + 1){
                                     ((Text) node).setText(String.valueOf(((DPState) dp.getListState().get(stepPointer)).getChangedValue()));
-                                    System.out.println(((DPState) dp.getListState().get(stepPointer)).getI() + "-" + ((DPState) dp.getListState().get(stepPointer)).getJ());
+                                    System.out.println(((DPState) dp.getListState().get(stepPointer)).getVerFrom() + "-" + ((DPState) dp.getListState().get(stepPointer)).getVerTo());
                                     break;
                                 }
                         }

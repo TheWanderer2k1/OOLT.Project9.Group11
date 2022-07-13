@@ -9,11 +9,11 @@ import java.util.ArrayList;
 public class State {
 //    Graph observedGraph;
 
-    ArrayList<Vertex> currentVertexes; //nhung dinh dc xet
-    ArrayList<Edge> currentEdges;      //nhung canh dc xet
+    private ArrayList<Vertex> currentVertexes; //nhung dinh dc xet
+    private ArrayList<Edge> currentEdges;      //nhung canh dc xet
 
-    ArrayList<Paint> vertexPaints;
-    ArrayList<Paint> edgePaints;
+    private ArrayList<Paint> vertexPaints;
+    private ArrayList<Paint> edgePaints;
 
 
     public ArrayList<Vertex> getCurrentVertexes() {

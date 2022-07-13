@@ -4,11 +4,8 @@ package com.group11.topic9.algorithm;
 import java.util.ArrayList;
 
 public abstract class  Step {
-//    public abstract void run();
-//    public abstract void pause();
-//    public abstract void nextOneStep();
-//    public abstract void backOneStep();
-    String content;
+
+    private String content;
 
     public String getContent() {
         return content;
