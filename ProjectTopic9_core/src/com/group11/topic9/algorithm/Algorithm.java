@@ -17,6 +17,7 @@ public abstract class Algorithm {
     //protected int stepPointer;
 
     public abstract void executeAlgorithm(Graph graph, int startID);
+    
 
     //public abstract void run();
 }
